@@ -1,12 +1,15 @@
 #pragma once
 
-enum EEngineTypes
+namespace PrioEngineII
 {
-	PrioEngine
-};
+	enum EEngineCodes;
 
-class CPrioEngine
-{
-	CPrioEngine(EEngineTypes engineType);
-};
+	class CPrioEngine
+	{
+	protected:
+		CPrioEngine();
 
+		virtual EEngineCodes GameLoop() = 0;
+		virtual void Render() = 0;
+	};
+}

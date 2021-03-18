@@ -102,11 +102,17 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\CD3D12PrioEngine.cpp" />
     <ClCompile Include="Source\CPrioEngine.cpp" />
+    <ClCompile Include="Source\CPrioEngineFactory.cpp" />
     <ClCompile Include="Source\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Header\CD3D12PrioEngine.h" />
     <ClInclude Include="Header\CPrioEngine.h" />
+    <ClInclude Include="Header\CPrioEngineFactory.h" />
+    <ClInclude Include="Header\EEngineCodes.h" />
+    <ClInclude Include="Header\EngineCreationException.h" />
     <ClInclude Include="Header\framework.h" />
     <ClInclude Include="Header\pch.h" />
   </ItemGroup>

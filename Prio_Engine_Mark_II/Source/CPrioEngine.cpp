@@ -1,6 +1,9 @@
-#include "..\Header\CPrioEngine.h"
+#include "pch.h"
+#include "CPrioEngine.h"
 
-CPrioEngine::CPrioEngine(EEngineTypes engineType)
+using namespace PrioEngineII;
+
+CPrioEngine::CPrioEngine()
 {
 	
 }
