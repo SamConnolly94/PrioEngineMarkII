@@ -21,8 +21,8 @@ namespace PrioEngineII
 		PrioEngine(HINSTANCE windowHandle);
 	public:
 		virtual EEngineCodes Initialise(std::shared_ptr<PrioEngine> engineInstance);
-		virtual EEngineCodes GameLoop() = 0;
-		virtual bool IsRunning() = 0;
+		EEngineCodes GameLoop();
+		bool IsRunning();
 		HINSTANCE GetAppInstance() const;
 		bool Get4xMsaaState() const;
 		void Set4xMsaaState(bool value);
@@ -66,5 +66,7 @@ namespace PrioEngineII
 
 		int mClientWidth = 800;
 		int mClientHeight = 600;
+
+		bool Quit = false;
 	};
 }

@@ -38,8 +38,43 @@ EEngineCodes PrioEngine::Initialise(std::shared_ptr<PrioEngine> engineInstance)
 
 	// Do the initial resize code.
 	OnResize();
+	mTimer->Reset();
 
 	return EEngineCodes::Success;
+}
+
+EEngineCodes PrioEngine::GameLoop()
+{
+	mTimer->Tick();
+
+	if (!mAppPaused)
+	{
+		CalculateFrameStats();
+		Update();
+		Draw();
+	}
+	else
+	{
+		Sleep(100);
+	}
+
+	return EEngineCodes::Success;
+}
+
+bool PrioEngine::IsRunning()
+{
+	MSG msg = { 0 };
+
+	// If there are Window messages then process them.
+	if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+
+		Quit = msg.message != WM_QUIT;
+	}
+
+	return msg.message != WM_QUIT;
 }
 
 HINSTANCE PrioEngine::GetAppInstance() const

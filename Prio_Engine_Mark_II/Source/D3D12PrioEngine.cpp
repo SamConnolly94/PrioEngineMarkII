@@ -11,39 +11,6 @@ D3D12PrioEngine::D3D12PrioEngine(_constructor_tag unique_ptr_tag, HINSTANCE hIns
 {
 }
 
-EEngineCodes D3D12PrioEngine::GameLoop()
-{
-	mTimer->Tick();
-
-	if (!mAppPaused)
-	{
-		CalculateFrameStats();
-		Update();
-		Draw();
-	}
-	else
-	{
-		Sleep(100);
-	}
-
-	return EEngineCodes::Success;
-}
-
-bool D3D12PrioEngine::IsRunning()
-{
-	MSG msg = { 0 };
-
-	mTimer->Reset();
-
-	// If there are Window messages then process them.
-	if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-	return msg.message != WM_QUIT;
-}
 
 void D3D12PrioEngine::CreateRtvAndDsvDescriptorHeaps()
 {
@@ -188,8 +155,7 @@ void D3D12PrioEngine::Draw()
 
 	// Clear the back buffer and depth buffer.
 	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
-	auto depthStencilViewDescriptor = DepthStencilView();
-	mCommandList->ClearDepthStencilView(depthStencilViewDescriptor, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	// Specify the buffers we are going to render to.
 	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
@@ -231,7 +197,7 @@ bool D3D12PrioEngine::InitGraphicsAPI()
 	// Try to create hardware device.
 	HRESULT hardwareResult = D3D12CreateDevice(
 		nullptr,             // default adapter
-		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_12_1,
 		IID_PPV_ARGS(&md3dDevice));
 
 	// Fallback to WARP device.
@@ -242,7 +208,7 @@ bool D3D12PrioEngine::InitGraphicsAPI()
 
 		ThrowIfFailed(D3D12CreateDevice(
 			pWarpAdapter.Get(),
-			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_12_1,
 			IID_PPV_ARGS(&md3dDevice)));
 	}
 

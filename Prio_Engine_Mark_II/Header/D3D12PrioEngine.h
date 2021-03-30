@@ -36,9 +36,6 @@ namespace PrioEngineII
             return std::move(std::make_shared<D3D12PrioEngine>(_constructor_tag{}, hInstance));
         }
 
-    public:
-        virtual EEngineCodes GameLoop() override;
-        virtual bool IsRunning() override;
     protected:
         virtual void CreateRtvAndDsvDescriptorHeaps();
         virtual void OnResize() override;
