@@ -10,7 +10,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Prio_Engine_Mark_II_Tests",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Prio_Engine_Mark_II", "Prio_Engine_Mark_II\Prio_Engine_Mark_II.vcxproj", "{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Runnable_Prio_Engine_Mark_II", "Runnable_Prio_Engine_Mark_II\Runnable_Prio_Engine_Mark_II.vcxproj", "{997AEE47-3358-4EE5-9547-19EB1D7C0FCC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Runnable_Prio_Engine_Mark_2", "Runnable_Prio_Engine_Mark_2\Runnable_Prio_Engine_Mark_2.vcxproj", "{2E158B9F-9EA9-4F91-8F46-01665FA88EB5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347} = {EAFFDBAA-3C95-4372-90AB-CBC7140CC347}
 	EndProjectSection
@@ -29,10 +29,10 @@ Global
 		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Debug|x64.Build.0 = Debug|x64
 		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Release|x64.ActiveCfg = Release|x64
 		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Release|x64.Build.0 = Release|x64
-		{997AEE47-3358-4EE5-9547-19EB1D7C0FCC}.Debug|x64.ActiveCfg = Debug|x64
-		{997AEE47-3358-4EE5-9547-19EB1D7C0FCC}.Debug|x64.Build.0 = Debug|x64
-		{997AEE47-3358-4EE5-9547-19EB1D7C0FCC}.Release|x64.ActiveCfg = Release|x64
-		{997AEE47-3358-4EE5-9547-19EB1D7C0FCC}.Release|x64.Build.0 = Release|x64
+		{2E158B9F-9EA9-4F91-8F46-01665FA88EB5}.Debug|x64.ActiveCfg = Debug|x64
+		{2E158B9F-9EA9-4F91-8F46-01665FA88EB5}.Debug|x64.Build.0 = Debug|x64
+		{2E158B9F-9EA9-4F91-8F46-01665FA88EB5}.Release|x64.ActiveCfg = Release|x64
+		{2E158B9F-9EA9-4F91-8F46-01665FA88EB5}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

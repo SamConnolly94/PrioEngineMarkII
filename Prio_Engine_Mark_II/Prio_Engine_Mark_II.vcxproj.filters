@@ -13,19 +13,46 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{efcaea8e-f02e-4bcf-a230-6470b7e47098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Header">
+      <UniqueIdentifier>{dd9e965a-db0a-4c93-a863-15fcaa222ce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Source">
+      <UniqueIdentifier>{97a65d83-a789-4d85-8d43-6358dfea1df3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\CPrioEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CPrioEngineFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CD3D12PrioEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\pch.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\D3D12PrioEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PrioEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PrioEngineFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\Camera.cpp">
+      <Filter>Common\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\d3dUtil.cpp">
+      <Filter>Common\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\DDSTextureLoader.cpp">
+      <Filter>Common\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\GameTimer.cpp">
+      <Filter>Common\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\GeometryGenerator.cpp">
+      <Filter>Common\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\MathHelper.cpp">
+      <Filter>Common\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -35,20 +62,44 @@
     <ClInclude Include="Header\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Header\CPrioEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\CPrioEngineFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\CD3D12PrioEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Header\EEngineCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Header\EngineCreationException.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\PrioEngineFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\PrioEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\D3D12PrioEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\LunaCommon\Include\Camera.h">
+      <Filter>Common\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\LunaCommon\Include\d3dUtil.h">
+      <Filter>Common\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\LunaCommon\Include\d3dx12.h">
+      <Filter>Common\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\LunaCommon\Include\DDSTextureLoader.h">
+      <Filter>Common\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\LunaCommon\Include\GameTimer.h">
+      <Filter>Common\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\LunaCommon\Include\GeometryGenerator.h">
+      <Filter>Common\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\LunaCommon\Include\MathHelper.h">
+      <Filter>Common\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\LunaCommon\Include\UploadBuffer.h">
+      <Filter>Common\Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

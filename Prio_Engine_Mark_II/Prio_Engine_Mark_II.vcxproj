@@ -48,22 +48,28 @@
     <OutDir>$(ProjectDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>dprioenginem2</TargetName>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>prioenginem2</TargetName>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Header</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Header;$(ProjectDir)Resources\LunaCommon\Include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
@@ -74,6 +80,7 @@
     </Link>
     <Lib>
       <OutputFile>$(OutDir)dprioenginem2$(TargetExt)</OutputFile>
+      <AdditionalDependencies>d3d12.lib;D3DCompiler.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -83,10 +90,10 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Header</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Header;$(ProjectDir)Resources\LunaCommon\Include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
@@ -99,22 +106,37 @@
     </Link>
     <Lib>
       <OutputFile>$(OutDir)prioenginem2$(TargetExt)</OutputFile>
+      <AdditionalDependencies>d3d12.lib;D3DCompiler.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\CD3D12PrioEngine.cpp" />
-    <ClCompile Include="Source\CPrioEngine.cpp" />
-    <ClCompile Include="Source\CPrioEngineFactory.cpp" />
+    <ClCompile Include="Resources\LunaCommon\Source\Camera.cpp" />
+    <ClCompile Include="Resources\LunaCommon\Source\d3dUtil.cpp" />
+    <ClCompile Include="Resources\LunaCommon\Source\DDSTextureLoader.cpp" />
+    <ClCompile Include="Resources\LunaCommon\Source\GameTimer.cpp" />
+    <ClCompile Include="Resources\LunaCommon\Source\GeometryGenerator.cpp" />
+    <ClCompile Include="Resources\LunaCommon\Source\MathHelper.cpp" />
+    <ClCompile Include="Source\D3D12PrioEngine.cpp" />
+    <ClCompile Include="Source\PrioEngine.cpp" />
+    <ClCompile Include="Source\PrioEngineFactory.cpp" />
     <ClCompile Include="Source\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Header\CD3D12PrioEngine.h" />
-    <ClInclude Include="Header\CPrioEngine.h" />
-    <ClInclude Include="Header\CPrioEngineFactory.h" />
+    <ClInclude Include="Header\D3D12PrioEngine.h" />
+    <ClInclude Include="Header\PrioEngine.h" />
+    <ClInclude Include="Header\PrioEngineFactory.h" />
     <ClInclude Include="Header\EEngineCodes.h" />
     <ClInclude Include="Header\EngineCreationException.h" />
     <ClInclude Include="Header\framework.h" />
     <ClInclude Include="Header\pch.h" />
+    <ClInclude Include="Resources\LunaCommon\Include\Camera.h" />
+    <ClInclude Include="Resources\LunaCommon\Include\d3dUtil.h" />
+    <ClInclude Include="Resources\LunaCommon\Include\d3dx12.h" />
+    <ClInclude Include="Resources\LunaCommon\Include\DDSTextureLoader.h" />
+    <ClInclude Include="Resources\LunaCommon\Include\GameTimer.h" />
+    <ClInclude Include="Resources\LunaCommon\Include\GeometryGenerator.h" />
+    <ClInclude Include="Resources\LunaCommon\Include\MathHelper.h" />
+    <ClInclude Include="Resources\LunaCommon\Include\UploadBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
