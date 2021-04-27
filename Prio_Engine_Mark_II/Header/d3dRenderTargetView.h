@@ -3,7 +3,10 @@
 #include "EEngineTypes.h"
 #include "PrioEngine.h"
 
+
 #include "d3dUtil.h"
+#include "Logger.h"
+
 #include <Windows.h>
 #include <memory>
 #include <d3d12.h>
@@ -88,7 +91,10 @@ namespace PrioEngineII
 
 			switch (mEngineType)
 			{
-			case PrioEngineII::EEngineTypes::DX3D12:
+			case EEngineTypes::DX3D12:
+#ifdef _DEBUG
+				Logger::GetInstance()->WriteToLog("Creating render target view for DirectX 12", ELogVerbosity::Trace);
+#endif
 				rtvHeapDesc.NumDescriptors = mSwapChainBufferCount;
 				rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 				rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
@@ -101,7 +107,5 @@ namespace PrioEngineII
 				break;
 			}
 		};
-
-
 	};
 }

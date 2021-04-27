@@ -69,9 +69,10 @@
       <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Header;$(ProjectDir)Resources\LunaCommon\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Resources\MagicEnum\Include;$(ProjectDir)Header;$(ProjectDir)Resources\LunaCommon\Include;$(ProjectDir)Resources\Date\Include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -93,9 +94,10 @@
       <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Header;$(ProjectDir)Resources\LunaCommon\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Resources\MagicEnum\Include;$(ProjectDir)Header;$(ProjectDir)Resources\LunaCommon\Include;$(ProjectDir)Resources\Date\Include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -117,6 +119,7 @@
     <ClCompile Include="Resources\LunaCommon\Source\GeometryGenerator.cpp" />
     <ClCompile Include="Resources\LunaCommon\Source\MathHelper.cpp" />
     <ClCompile Include="Source\D3D12PrioEngine.cpp" />
+    <ClCompile Include="Source\Logger.cpp" />
     <ClCompile Include="Source\PrioEngine.cpp" />
     <ClCompile Include="Source\PrioEngineFactory.cpp" />
     <ClCompile Include="Source\pch.cpp" />
@@ -125,12 +128,15 @@
     <ClInclude Include="Header\D3D12PrioEngine.h" />
     <ClInclude Include="Header\d3dRenderTargetView.h" />
     <ClInclude Include="Header\EEngineTypes.h" />
+    <ClInclude Include="Header\ELogVerbosity.h" />
+    <ClInclude Include="Header\Logger.h" />
     <ClInclude Include="Header\PrioEngine.h" />
     <ClInclude Include="Header\PrioEngineFactory.h" />
     <ClInclude Include="Header\EEngineCodes.h" />
     <ClInclude Include="Header\EngineCreationException.h" />
     <ClInclude Include="Header\framework.h" />
     <ClInclude Include="Header\pch.h" />
+    <ClInclude Include="Resources\Date\Include\date.h" />
     <ClInclude Include="Resources\LunaCommon\Include\Camera.h" />
     <ClInclude Include="Resources\LunaCommon\Include\d3dUtil.h" />
     <ClInclude Include="Resources\LunaCommon\Include\d3dx12.h" />
@@ -139,6 +145,7 @@
     <ClInclude Include="Resources\LunaCommon\Include\GeometryGenerator.h" />
     <ClInclude Include="Resources\LunaCommon\Include\MathHelper.h" />
     <ClInclude Include="Resources\LunaCommon\Include\UploadBuffer.h" />
+    <ClInclude Include="Resources\MagicEnum\Include\magic_enum.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

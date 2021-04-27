@@ -13,15 +13,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Common">
-      <UniqueIdentifier>{efcaea8e-f02e-4bcf-a230-6470b7e47098}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\Header">
-      <UniqueIdentifier>{dd9e965a-db0a-4c93-a863-15fcaa222ce0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\Source">
-      <UniqueIdentifier>{97a65d83-a789-4d85-8d43-6358dfea1df3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\D3D12">
       <UniqueIdentifier>{7c70e9dc-2f17-4854-a595-117d1acf9c9e}</UniqueIdentifier>
     </Filter>
@@ -43,6 +34,30 @@
     <Filter Include="Header Files\DirectX">
       <UniqueIdentifier>{fb47a505-dcab-4ccc-a3a7-2ae3893fe5d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{2bb18a0b-96e4-4952-8885-a014cabed668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility">
+      <UniqueIdentifier>{a9c1cdab-cb78-4769-b7b3-f9f8a80d867f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\LunaCommon">
+      <UniqueIdentifier>{efcaea8e-f02e-4bcf-a230-6470b7e47098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\LunaCommon\Header">
+      <UniqueIdentifier>{dd9e965a-db0a-4c93-a863-15fcaa222ce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\LunaCommon\Source">
+      <UniqueIdentifier>{97a65d83-a789-4d85-8d43-6358dfea1df3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Date">
+      <UniqueIdentifier>{59402d9e-d84b-4830-b7ba-8d8bdf0b8725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Date\Header">
+      <UniqueIdentifier>{b74c7274-0012-4d7e-90ed-5d51bb6a6241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\MagicEnum">
+      <UniqueIdentifier>{e08b15e1-b59d-472d-a3c4-2b15b034d7e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\PrioEngine.cpp">
@@ -52,28 +67,31 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Resources\LunaCommon\Source\Camera.cpp">
-      <Filter>Common\Source</Filter>
+      <Filter>Resource Files\LunaCommon\Source</Filter>
     </ClCompile>
     <ClCompile Include="Resources\LunaCommon\Source\d3dUtil.cpp">
-      <Filter>Common\Source</Filter>
+      <Filter>Resource Files\LunaCommon\Source</Filter>
     </ClCompile>
     <ClCompile Include="Resources\LunaCommon\Source\DDSTextureLoader.cpp">
-      <Filter>Common\Source</Filter>
+      <Filter>Resource Files\LunaCommon\Source</Filter>
     </ClCompile>
     <ClCompile Include="Resources\LunaCommon\Source\GameTimer.cpp">
-      <Filter>Common\Source</Filter>
+      <Filter>Resource Files\LunaCommon\Source</Filter>
     </ClCompile>
     <ClCompile Include="Resources\LunaCommon\Source\GeometryGenerator.cpp">
-      <Filter>Common\Source</Filter>
+      <Filter>Resource Files\LunaCommon\Source</Filter>
     </ClCompile>
     <ClCompile Include="Resources\LunaCommon\Source\MathHelper.cpp">
-      <Filter>Common\Source</Filter>
+      <Filter>Resource Files\LunaCommon\Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\D3D12PrioEngine.cpp">
       <Filter>Source Files\D3D12</Filter>
     </ClCompile>
     <ClCompile Include="Source\pch.cpp">
       <Filter>Source Files\Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Logger.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,28 +108,28 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resources\LunaCommon\Include\Camera.h">
-      <Filter>Common\Header</Filter>
+      <Filter>Resource Files\LunaCommon\Header</Filter>
     </ClInclude>
     <ClInclude Include="Resources\LunaCommon\Include\d3dUtil.h">
-      <Filter>Common\Header</Filter>
+      <Filter>Resource Files\LunaCommon\Header</Filter>
     </ClInclude>
     <ClInclude Include="Resources\LunaCommon\Include\d3dx12.h">
-      <Filter>Common\Header</Filter>
+      <Filter>Resource Files\LunaCommon\Header</Filter>
     </ClInclude>
     <ClInclude Include="Resources\LunaCommon\Include\DDSTextureLoader.h">
-      <Filter>Common\Header</Filter>
+      <Filter>Resource Files\LunaCommon\Header</Filter>
     </ClInclude>
     <ClInclude Include="Resources\LunaCommon\Include\GameTimer.h">
-      <Filter>Common\Header</Filter>
+      <Filter>Resource Files\LunaCommon\Header</Filter>
     </ClInclude>
     <ClInclude Include="Resources\LunaCommon\Include\GeometryGenerator.h">
-      <Filter>Common\Header</Filter>
+      <Filter>Resource Files\LunaCommon\Header</Filter>
     </ClInclude>
     <ClInclude Include="Resources\LunaCommon\Include\MathHelper.h">
-      <Filter>Common\Header</Filter>
+      <Filter>Resource Files\LunaCommon\Header</Filter>
     </ClInclude>
     <ClInclude Include="Resources\LunaCommon\Include\UploadBuffer.h">
-      <Filter>Common\Header</Filter>
+      <Filter>Resource Files\LunaCommon\Header</Filter>
     </ClInclude>
     <ClInclude Include="Header\D3D12PrioEngine.h">
       <Filter>Header Files\D3D12</Filter>
@@ -127,6 +145,18 @@
     </ClInclude>
     <ClInclude Include="Header\d3dRenderTargetView.h">
       <Filter>Header Files\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Date\Include\date.h">
+      <Filter>Resource Files\Date\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\MagicEnum\Include\magic_enum.hpp">
+      <Filter>Resource Files\MagicEnum</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\ELogVerbosity.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Logger.h">
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
