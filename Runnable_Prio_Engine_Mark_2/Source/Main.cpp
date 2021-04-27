@@ -5,9 +5,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 {
     myEngine = CreateEngine(hInstance);
 
+    // Game loop
     while (myEngine->IsRunning())
     {
-        myEngine->GameLoop();
+        
+        myEngine->DrawFrame();
 
     }
 }

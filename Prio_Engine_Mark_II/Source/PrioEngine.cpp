@@ -43,14 +43,13 @@ EEngineCodes PrioEngine::Initialise(std::shared_ptr<PrioEngine> engineInstance)
 	return EEngineCodes::Success;
 }
 
-EEngineCodes PrioEngine::GameLoop()
+EEngineCodes PrioEngine::DrawFrame()
 {
 	mTimer->Tick();
 
 	if (!mAppPaused)
 	{
 		CalculateFrameStats();
-		Update();
 		Draw();
 	}
 	else
@@ -85,6 +84,11 @@ HINSTANCE PrioEngine::GetAppInstance() const
 bool PrioEngine::Get4xMsaaState() const
 {
 	return m4xMsaaState;
+}
+
+float PrioEngine::GetDeltaTime() const
+{
+	return mTimer->DeltaTime();
 }
 
 void PrioEngine::Set4xMsaaState(bool value)

@@ -21,7 +21,7 @@ namespace PrioEngineII
 		PrioEngine(HINSTANCE windowHandle);
 	public:
 		virtual EEngineCodes Initialise(std::shared_ptr<PrioEngine> engineInstance);
-		EEngineCodes GameLoop();
+		EEngineCodes DrawFrame();
 		bool IsRunning();
 		HINSTANCE GetAppInstance() const;
 		bool Get4xMsaaState() const;
@@ -29,8 +29,8 @@ namespace PrioEngineII
 		virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		float AspectRatio() const;
 		HWND MainWnd() const;
+		float GetDeltaTime() const;
 	protected:
-		virtual void Update() = 0;
 		virtual void Draw() = 0;
 		bool InitMainWindow();
 

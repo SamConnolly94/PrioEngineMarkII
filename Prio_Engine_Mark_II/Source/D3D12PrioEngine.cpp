@@ -131,10 +131,6 @@ void D3D12PrioEngine::OnResize()
 	mScissorRect = { 0, 0, mClientWidth, mClientHeight };
 }
 
-void D3D12PrioEngine::Update()
-{
-}
-
 void D3D12PrioEngine::Draw()
 {
 	// Reuse the memory associated with command recording.

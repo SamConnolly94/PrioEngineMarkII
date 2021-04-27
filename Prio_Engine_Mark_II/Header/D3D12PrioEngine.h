@@ -39,7 +39,6 @@ namespace PrioEngineII
     protected:
         virtual void CreateRtvAndDsvDescriptorHeaps();
         virtual void OnResize() override;
-        virtual void Update() override;
         virtual void Draw() override;
     protected:
         virtual bool InitGraphicsAPI() override;
