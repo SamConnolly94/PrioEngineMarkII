@@ -22,14 +22,29 @@
     <Filter Include="Common\Source">
       <UniqueIdentifier>{97a65d83-a789-4d85-8d43-6358dfea1df3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\D3D12">
+      <UniqueIdentifier>{7c70e9dc-2f17-4854-a595-117d1acf9c9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\D3D12">
+      <UniqueIdentifier>{ad9eac6e-ed70-4f34-b181-8f0e4bf165d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Exceptions">
+      <UniqueIdentifier>{7b64b6c6-d679-4175-a702-c12fa88cef7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Precompiled">
+      <UniqueIdentifier>{1c67cfb8-faeb-4e44-a5dd-33794ec16bd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Precompiled">
+      <UniqueIdentifier>{9afe33a3-cf84-4236-a818-8f519ed40ce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DirectX">
+      <UniqueIdentifier>{978be2aa-6ea4-4a76-ab8c-aa691c3721b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DirectX">
+      <UniqueIdentifier>{fb47a505-dcab-4ccc-a3a7-2ae3893fe5d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\D3D12PrioEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\PrioEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,27 +69,24 @@
     <ClCompile Include="Resources\LunaCommon\Source\MathHelper.cpp">
       <Filter>Common\Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\D3D12PrioEngine.cpp">
+      <Filter>Source Files\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\pch.cpp">
+      <Filter>Source Files\Precompiled</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Header\pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Header\EEngineCodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\EngineCreationException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Header\PrioEngineFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Header\PrioEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\D3D12PrioEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resources\LunaCommon\Include\Camera.h">
@@ -100,6 +112,21 @@
     </ClInclude>
     <ClInclude Include="Resources\LunaCommon\Include\UploadBuffer.h">
       <Filter>Common\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\D3D12PrioEngine.h">
+      <Filter>Header Files\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\EngineCreationException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\pch.h">
+      <Filter>Header Files\Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\EEngineTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\d3dRenderTargetView.h">
+      <Filter>Header Files\DirectX</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

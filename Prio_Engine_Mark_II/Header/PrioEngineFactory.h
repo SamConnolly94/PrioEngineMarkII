@@ -3,14 +3,10 @@
 #include <memory>
 #include <Windows.h>
 #include "D3D12PrioEngine.h"
+#include "EEngineTypes.h"
 
 namespace PrioEngineII
 {
-	enum class EEngineTypes
-	{
-		DX3D12
-	};
-
 	class PrioEngineFactory
 	{
 	public:

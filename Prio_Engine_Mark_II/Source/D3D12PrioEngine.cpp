@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "D3D12PrioEngine.h"
 #include "EEngineCodes.h"
+#include <Windows.h>
 
 using Microsoft::WRL::ComPtr;
 using namespace std;
@@ -14,14 +15,7 @@ D3D12PrioEngine::D3D12PrioEngine(_constructor_tag unique_ptr_tag, HINSTANCE hIns
 
 void D3D12PrioEngine::CreateRtvAndDsvDescriptorHeaps()
 {
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
-	rtvHeapDesc.NumDescriptors = SwapChainBufferCount;
-	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	rtvHeapDesc.NodeMask = 0;
-	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(
-		&rtvHeapDesc, IID_PPV_ARGS(mRtvHeap.GetAddressOf())));
-
+	mRenderTargetView = std::make_unique<d3dRenderTargetView<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>>(md3dDevice, EEngineTypes::DX3D12, SwapChainBufferCount);
 
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
 	dsvHeapDesc.NumDescriptors = 1;
@@ -59,7 +53,7 @@ void D3D12PrioEngine::OnResize()
 
 	mCurrBackBuffer = 0;
 
-	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(mRtvHeap->GetCPUDescriptorHandleForHeapStart());
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(mRenderTargetView->GetHeap()->GetCPUDescriptorHandleForHeapStart());
 	for (UINT i = 0; i < SwapChainBufferCount; i++)
 	{
 		ThrowIfFailed(mSwapChain->GetBuffer(i, IID_PPV_ARGS(&mSwapChainBuffer[i])));
@@ -328,7 +322,7 @@ ID3D12Resource* D3D12PrioEngine::CurrentBackBuffer()const
 D3D12_CPU_DESCRIPTOR_HANDLE D3D12PrioEngine::CurrentBackBufferView() const
 {
 	return CD3DX12_CPU_DESCRIPTOR_HANDLE(
-		mRtvHeap->GetCPUDescriptorHandleForHeapStart(),
+		mRenderTargetView->GetHeap()->GetCPUDescriptorHandleForHeapStart(),
 		mCurrBackBuffer,
 		mRtvDescriptorSize);
 }

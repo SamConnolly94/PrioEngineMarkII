@@ -123,6 +123,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\D3D12PrioEngine.h" />
+    <ClInclude Include="Header\d3dRenderTargetView.h" />
+    <ClInclude Include="Header\EEngineTypes.h" />
     <ClInclude Include="Header\PrioEngine.h" />
     <ClInclude Include="Header\PrioEngineFactory.h" />
     <ClInclude Include="Header\EEngineCodes.h" />

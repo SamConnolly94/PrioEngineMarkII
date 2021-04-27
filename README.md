@@ -16,8 +16,10 @@ Currently Prio Engine Mark II relies on some files from Frank Luna's 3D Game Pro
 * UploadBuffer.h
 
 ## Usage
-The build will produce a static library, you can include that static library in another Windows project and define a main function for a Windows project. The windows main function should look something like this:
+The build will produce a static library, you can include that static library in another Windows project and define a main function for a Windows project. The solution consists of three projects, a static library project, a testing project, and a runnable project. The runnable project is for you to invoke and test the engine with, the testing project is for you to write your unit tests, and the static library project will build the static objects which 
 
+
+### Windows Main Function
 ```int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd)```
 
 ## Code Style
