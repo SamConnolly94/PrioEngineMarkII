@@ -93,7 +93,7 @@ namespace PrioEngineII
 			{
 			case EEngineTypes::DX3D12:
 #ifdef _DEBUG
-				Logger::GetInstance()->WriteToLog("Creating render target view for DirectX 12", ELogVerbosity::Trace);
+				Logger::GetInstance()->Write("Creating render target view for DirectX 12", ELogVerbosity::Trace);
 #endif
 				rtvHeapDesc.NumDescriptors = mSwapChainBufferCount;
 				rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;

@@ -1,14 +1,13 @@
 #include "pch.h"
 #include "Logger.h"
+
+// External library includes
 #include <chrono>
 #include <date.h>
 #include <iostream>
 #include <fstream>
 #include <magic_enum.hpp>
-#include <locale>
-#include <codecvt>
 #include <Windows.h>
-#include <cstdlib>
 
 using namespace std;
 using namespace PrioEngineII;
@@ -31,10 +30,20 @@ Logger* Logger::GetInstance()
 	return mInstance;
 }
 
-void Logger::WriteToLog(std::string message, PrioEngineII::ELogVerbosity logVerbosity)
+void Logger::Write(std::string message, PrioEngineII::ELogVerbosity logVerbosity)
 {
-	ofstream logFile;
+	// Create the message from what was passed in
+	std::string logMessage = ConstructLogMessage(message, logVerbosity);
 
+	// Write message to the log file
+	WriteToFile(logMessage);
+
+	// Write message to output window
+	WriteMessageToOutputWindow(logMessage);
+}
+
+std::string Logger::ConstructLogMessage(std::string& message, ELogVerbosity& logVerbosity)
+{
 	// Evaluate the verbosity statement on the log message
 	auto verbosityString = magic_enum::enum_name(logVerbosity);
 
@@ -44,17 +53,26 @@ void Logger::WriteToLog(std::string message, PrioEngineII::ELogVerbosity logVerb
 	// Format the log message that should be output
 	std::string logMessage = "[" + static_cast<std::string>(verbosityString) + "] " + timestamp + ": " + message;
 
-	// processenv.h
-	std::string directory = ".\\Logs\\";
-	logFile.open(directory + mFilename);
+	return logMessage;
+}
+
+void Logger::WriteToFile(std::string& logMessage)
+{
+	// Open the log file for writing
+	ofstream logFile(mDirectory + mFilename);
+
 	if (logFile.is_open())
 	{
 		logFile << logMessage << std::endl;
 		logFile.close();
 	}
+}
 
-	// Output to the console
-	std::wstring result(logMessage.begin(), logMessage.end());
+void Logger::WriteMessageToOutputWindow(std::string& logMessage)
+{
+	// Format as a wide string to be output to console
+	std::wstring wideStrLogMessage(logMessage.begin(), logMessage.end());
 
-	OutputDebugString(result.c_str());
+	// Output to console
+	OutputDebugString(wideStrLogMessage.c_str());
 }
