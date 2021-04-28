@@ -5,6 +5,10 @@
 #include <iostream>
 #include <fstream>
 #include <magic_enum.hpp>
+#include <locale>
+#include <codecvt>
+#include <Windows.h>
+#include <cstdlib>
 
 using namespace std;
 using namespace PrioEngineII;
@@ -13,8 +17,8 @@ Logger* Logger::mInstance = nullptr;;
 
 Logger::Logger()
 {
-	auto dateTime = date::format("%F, %T", chrono::system_clock::now());
-	mFilename = "Prio Engine Mark II Log " + dateTime;
+	auto dateTime = date::format("%F_%H-%M", chrono::system_clock::now());
+	mFilename = dateTime + "_Prio-Engine-Log.txt";
 }
 
 Logger* Logger::GetInstance()
@@ -29,14 +33,28 @@ Logger* Logger::GetInstance()
 
 void Logger::WriteToLog(std::string message, PrioEngineII::ELogVerbosity logVerbosity)
 {
-	ofstream logFile(mFilename);
+	ofstream logFile;
 
-	//logFile.open(mFilename);
+	// Evaluate the verbosity statement on the log message
+	auto verbosityString = magic_enum::enum_name(logVerbosity);
+
+	// Evaluate the timestamp on the log message
+	auto timestamp = date::format("%H:%M", chrono::system_clock::now());
+
+	// Format the log message that should be output
+	std::string logMessage = "[" + static_cast<std::string>(verbosityString) + "] " + timestamp + ": " + message;
+
+	// processenv.h
+	std::string directory = ".\\Logs\\";
+	logFile.open(directory + mFilename);
 	if (logFile.is_open())
 	{
-		auto verbosityString = magic_enum::enum_name(logVerbosity);
-		auto timestamp = date::format("%T", chrono::system_clock::now());
-		logFile << "[" << verbosityString << "] " << timestamp << ":" << message << std::endl;
+		logFile << logMessage << std::endl;
 		logFile.close();
 	}
+
+	// Output to the console
+	std::wstring result(logMessage.begin(), logMessage.end());
+
+	OutputDebugString(result.c_str());
 }
