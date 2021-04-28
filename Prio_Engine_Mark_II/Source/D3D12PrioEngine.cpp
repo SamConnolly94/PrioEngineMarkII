@@ -16,14 +16,7 @@ D3D12PrioEngine::D3D12PrioEngine(_constructor_tag unique_ptr_tag, HINSTANCE hIns
 void D3D12PrioEngine::CreateRtvAndDsvDescriptorHeaps()
 {
 	mRenderTargetView = std::make_unique<d3dRenderTargetView<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>>(md3dDevice, EEngineTypes::DX3D12, SwapChainBufferCount);
-
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
-	dsvHeapDesc.NumDescriptors = 1;
-	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	dsvHeapDesc.NodeMask = 0;
-	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(
-		&dsvHeapDesc, IID_PPV_ARGS(mDsvHeap.GetAddressOf())));
+	mDepthStencilView = std::make_unique<d3dDepthStencilView<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>>(md3dDevice, EEngineTypes::DX3D12);
 }
 
 void D3D12PrioEngine::OnResize()
@@ -329,7 +322,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE D3D12PrioEngine::CurrentBackBufferView() const
 
 D3D12_CPU_DESCRIPTOR_HANDLE D3D12PrioEngine::DepthStencilView() const
 {
-	return mDsvHeap->GetCPUDescriptorHandleForHeapStart();
+	return mDepthStencilView->GetHeap()->GetCPUDescriptorHandleForHeapStart();
 }
 
 void D3D12PrioEngine::LogAdapters()

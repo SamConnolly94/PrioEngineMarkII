@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "Logger.h"
+#include "EnumUtilities.h"
 
 // External library includes
 #include <chrono>
 #include <date.h>
 #include <iostream>
 #include <fstream>
-#include <magic_enum.hpp>
 #include <Windows.h>
 
 using namespace std;
@@ -32,6 +32,11 @@ Logger* Logger::GetInstance()
 
 void Logger::Write(std::string message, PrioEngineII::ELogVerbosity logVerbosity)
 {
+	// Only perform logging when running in debug mode.
+#ifndef _DEBUG
+	return;
+#endif
+
 	// Create the message from what was passed in
 	std::string logMessage = ConstructLogMessage(message, logVerbosity);
 
@@ -45,7 +50,7 @@ void Logger::Write(std::string message, PrioEngineII::ELogVerbosity logVerbosity
 std::string Logger::ConstructLogMessage(std::string& message, ELogVerbosity& logVerbosity)
 {
 	// Evaluate the verbosity statement on the log message
-	auto verbosityString = magic_enum::enum_name(logVerbosity);
+	auto verbosityString = EnumUtilities::ToString(logVerbosity);
 
 	// Evaluate the timestamp on the log message
 	auto timestamp = date::format("%H:%M", chrono::system_clock::now());

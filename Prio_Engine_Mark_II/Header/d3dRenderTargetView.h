@@ -2,10 +2,9 @@
 
 #include "EEngineTypes.h"
 #include "PrioEngine.h"
-
-
 #include "d3dUtil.h"
 #include "Logger.h"
+#include "EnumUtilities.h"
 
 #include <Windows.h>
 #include <memory>
@@ -92,9 +91,7 @@ namespace PrioEngineII
 			switch (mEngineType)
 			{
 			case EEngineTypes::DX3D12:
-#ifdef _DEBUG
 				Logger::GetInstance()->Write("Creating render target view for DirectX 12", ELogVerbosity::Trace);
-#endif
 				rtvHeapDesc.NumDescriptors = mSwapChainBufferCount;
 				rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 				rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
@@ -103,7 +100,7 @@ namespace PrioEngineII
 					&rtvHeapDesc, IID_PPV_ARGS(mRtvHeap.GetAddressOf())));
 				break;
 			default:
-
+				Logger::GetInstance()->Write("Attempted to create render target view for unsupported graphics API " + EnumUtilities::ToString(mEngineType), ELogVerbosity::Error);
 				break;
 			}
 		};

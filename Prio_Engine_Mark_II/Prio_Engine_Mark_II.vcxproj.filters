@@ -93,6 +93,9 @@
     <ClCompile Include="Source\Logger.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Source\EnumUtilities.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\framework.h">
@@ -156,6 +159,12 @@
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Header\Logger.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\d3dDepthStencilView.h">
+      <Filter>Header Files\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\EnumUtilities.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>

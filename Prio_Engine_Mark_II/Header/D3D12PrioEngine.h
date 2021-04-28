@@ -10,6 +10,7 @@
 
 // Custom includes
 #include "d3dRenderTargetView.h"
+#include "d3dDepthStencilView.h"
 
 // Link necessary d3d12 libraries.
 #pragma comment(lib, "D3D12.lib")
@@ -76,7 +77,7 @@ namespace PrioEngineII
 		Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
 
 		std::unique_ptr<PrioEngineII::d3dRenderTargetView<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>> mRenderTargetView;
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap;
+		std::unique_ptr<PrioEngineII::d3dDepthStencilView<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>> mDepthStencilView;
 
 		D3D12_VIEWPORT mScreenViewport;
 		D3D12_RECT mScissorRect;
