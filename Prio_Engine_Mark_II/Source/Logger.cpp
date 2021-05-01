@@ -75,8 +75,10 @@ void Logger::WriteToFile(std::string& logMessage)
 
 void Logger::WriteMessageToOutputWindow(std::string& logMessage)
 {
+	auto outputMsg = logMessage + "\r\n";
+
 	// Format as a wide string to be output to console
-	std::wstring wideStrLogMessage(logMessage.begin(), logMessage.end());
+	std::wstring wideStrLogMessage(outputMsg.begin(), outputMsg.end());
 
 	// Output to console
 	OutputDebugString(wideStrLogMessage.c_str());

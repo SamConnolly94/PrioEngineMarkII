@@ -31,14 +31,14 @@ using namespace PrioEngineII;
 namespace PrioEngineII
 {
 	/// <summary>
-	/// A wrapper for the render target view for Direct X based engines. Will provide functionality for creating the render target view,
+	/// A wrapper for the render target view heap for Direct X based engines. Will provide functionality for creating the render target view,
 	/// and should only require you to provide the required types.
 	/// </summary>
 	/// <typeparam name="DirectXDevice"></typeparam>
 	/// <typeparam name="HeapType"></typeparam>
 	/// <typeparam name="HeapDescriptorType"></typeparam>
-	template <class DirectXDevice, class HeapType, class HeapDescriptorType>
-	class d3dRenderTargetView
+	template <class DirectXDeviceType, class HeapType, class HeapDescriptorType>
+	class d3dRenderTargetViewHeap
 	{
 	public:
 		/// <summary>
@@ -47,7 +47,7 @@ namespace PrioEngineII
 		/// <param name="d3dDevice">The pointer to the Direct X device</param>
 		/// <param name="engineType">The type of engine (to work out which version of Direct X we should create the RTV for.</param>
 		/// <param name="swapChainBufferCount">The amount of buffers included in the swap chain (typically 2).</param>
-		d3dRenderTargetView(ComPtr<DirectXDevice>& d3dDevice, EEngineTypes engineType, unsigned int swapChainBufferCount)
+		d3dRenderTargetViewHeap(ComPtr<DirectXDeviceType>& d3dDevice, EEngineTypes engineType, unsigned int swapChainBufferCount)
 		{
 			mEngineType = engineType;
 			mSwapChainBufferCount = swapChainBufferCount;
@@ -84,7 +84,7 @@ namespace PrioEngineII
 		/// Initialises a render target view descriptor, and creates the render target view based on that descriptor.
 		/// </summary>
 		/// <param name="d3dDevice">The device that should be used to create the RTV from the descriptor</param>
-		void CreateRenderTargetView(ComPtr<DirectXDevice>& d3dDevice)
+		void CreateRenderTargetView(ComPtr<DirectXDeviceType>& d3dDevice)
 		{
 			HeapDescriptorType rtvHeapDesc;
 

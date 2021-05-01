@@ -31,69 +31,96 @@ using namespace PrioEngineII;
 
 namespace PrioEngineII
 {
-	/// <summary>
-	/// A wrapper for the depth stencil view for DirectX based engines. Will provide functionality for creating the depth stencil view,
-	/// and should only require you to provide the required types.
-	/// </summary>
-	/// <typeparam name="DirectXDevice">The type of device used to create depth stencil views</typeparam>
-	/// <typeparam name="HeapType">The type of the heap that will be used to store the depth stencil view</typeparam>
-	/// <typeparam name="HeapDescriptorType">The type of the heap descriptor that will be used to create the heap for the depth stencil view</typeparam>
-	template <class DirectXDevice, class HeapType, class HeapDescriptorType>
+
+	template <class DirectXDeviceType, class DirectXResourceType, class CpuDescriptorHandle/*D3D12_CPU_DESCRIPTOR_HANDLE*/>
 	class d3dDepthStencilView
 	{
 	public:
-		/// <summary>
-		/// Constructor which will initialise the depth stencil view
-		/// </summary>
-		/// <param name="d3dDevice">The pointer to the Direct X device</param>
-		/// <param name="engineType">The type of engine (to work out which version of Direct X we should create the RTV for.</param>
-		d3dDepthStencilView(ComPtr<DirectXDevice>& d3dDevice, EEngineTypes engineType)
+
+		d3dDepthStencilView(ComPtr<DirectXDeviceType> d3dDevice, 
+			CpuDescriptorHandle depthStencilViewDescriptorHandle,
+			EEngineTypes engineType,
+			const int& width, 
+			const int& height, 
+			const bool& m4xMsaaState,
+			UINT& m4xMsaaQuality)
 		{
-			mEngineType = engineType;
-			CreateDepthStencilView(d3dDevice);
+			mDepthStencilBuffer.Reset();
+			CreateDepthStencilViewDesc(d3dDevice, depthStencilViewDescriptorHandle, engineType, width, height, m4xMsaaState, m4xMsaaQuality);
 		}
 	private:
-		/// <summary>
-		/// The type of engine this depth stencil view is for
-		/// </summary>
-		EEngineTypes mEngineType;
+		ComPtr<DirectXResourceType> mDepthStencilBuffer;
 
-		/// <summary>
-		/// A reference to the depth stencil view 
-		/// </summary>
-		ComPtr<HeapType> mDsvHeap;
-
+		DXGI_FORMAT mDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	public:
-		/// <summary>
-		/// Acquires a pointer to the depth stencil view heap. Marked as const to avoid accidental data modification within getter method.
-		/// </summary>
-		/// <returns>The pointer to the RTV heap</returns>
-		ComPtr<HeapType> GetHeap() const
+		ComPtr<DirectXResourceType> GetDepthStencilBufferPtr()
 		{
-			return mDsvHeap;
+			return mDepthStencilBuffer;
 		}
+
 	private:
 		/// <summary>
-		/// Initialises a depth stencil view descriptor, and creates the depth stencil view based on that descriptor.
+		/// Initialises a constant buffer view descriptor, and creates the constant buffer view based on that descriptor.
 		/// </summary>
-		/// <param name="d3dDevice">The device that should be used to create the DSV from the descriptor</param>
-		void CreateDepthStencilView(ComPtr<DirectXDevice>& d3dDevice)
+		/// <param name="d3dDevice">The device that should be used to create the CBV from the descriptor</param>
+		void CreateDepthStencilViewDesc(ComPtr<DirectXDeviceType> d3dDevice, 
+			CpuDescriptorHandle depthStencilViewDescriptorHandle,
+			EEngineTypes engineType, 
+			const int& width, 
+			const int& height, 
+			const bool& m4xMsaaState, 
+			const UINT m4xMsaaQuality)
 		{
-			D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
-
-			switch (mEngineType)
+			switch (engineType)
 			{
 			case EEngineTypes::DX3D12:
 				Logger::GetInstance()->Write("Creating depth stencil view for DirectX 12", ELogVerbosity::Trace);
-				dsvHeapDesc.NumDescriptors = 1;
-				dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-				dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-				dsvHeapDesc.NodeMask = 0;
-				ThrowIfFailed(d3dDevice->CreateDescriptorHeap(
-					&dsvHeapDesc, IID_PPV_ARGS(mDsvHeap.GetAddressOf())));
+
+				D3D12_RESOURCE_DESC depthStencilDesc;
+				// Create the depth/stencil buffer and view.
+				depthStencilDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+				depthStencilDesc.Alignment = 0;
+				depthStencilDesc.Width = width;
+				depthStencilDesc.Height = height;
+				depthStencilDesc.DepthOrArraySize = 1;
+				depthStencilDesc.MipLevels = 1;
+
+
+				// Correction 11/12/2016: SSAO chapter requires an SRV to the depth buffer to read from 
+				// the depth buffer.  Therefore, because we need to create two views to the same resource:
+				//   1. SRV format: DXGI_FORMAT_R24_UNORM_X8_TYPELESS
+				//   2. DSV Format: DXGI_FORMAT_D24_UNORM_S8_UINT
+				// we need to create the depth buffer resource with a typeless format.  
+				depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+
+				depthStencilDesc.SampleDesc.Count = m4xMsaaState ? 4 : 1;
+				depthStencilDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
+				depthStencilDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+				depthStencilDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+				D3D12_CLEAR_VALUE optClear;
+				optClear.Format = mDepthStencilFormat;
+				optClear.DepthStencil.Depth = 1.0f;
+				optClear.DepthStencil.Stencil = 0;
+				ThrowIfFailed(d3dDevice->CreateCommittedResource(
+					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+					D3D12_HEAP_FLAG_NONE,
+					&depthStencilDesc,
+					D3D12_RESOURCE_STATE_COMMON,
+					&optClear,
+					IID_PPV_ARGS(mDepthStencilBuffer.GetAddressOf())));
+
+				// Create descriptor to mip level 0 of entire resource using the format of the resource.
+				D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+				dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+				dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+				dsvDesc.Format = mDepthStencilFormat;
+				dsvDesc.Texture2D.MipSlice = 0;
+				d3dDevice->CreateDepthStencilView(mDepthStencilBuffer.Get(), &dsvDesc, depthStencilViewDescriptorHandle);
+
 				break;
 			default:
-				Logger::GetInstance()->Write("Attempted to create depth stencil view for unsupported graphics API " + EnumUtilities::ToString(mEngineType), ELogVerbosity::Error);
+				Logger::GetInstance()->Write("Attempted to create deptch stencil view for unsupported graphics API " + EnumUtilities::ToString(engineType), ELogVerbosity::Error);
 				break;
 			}
 		};

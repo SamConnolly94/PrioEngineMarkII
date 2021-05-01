@@ -58,6 +58,15 @@
     <Filter Include="Resource Files\MagicEnum">
       <UniqueIdentifier>{e08b15e1-b59d-472d-a3c4-2b15b034d7e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{d50cfb2c-15b8-42ca-9610-9e0df3f4da83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DirectX\Heaps">
+      <UniqueIdentifier>{40ba4e79-5abe-43ee-823d-d34251e0cea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DirectX\Depth Stencil View">
+      <UniqueIdentifier>{6deb8417-3eba-480d-8648-c89f05574b34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\PrioEngine.cpp">
@@ -95,6 +104,9 @@
     </ClCompile>
     <ClCompile Include="Source\EnumUtilities.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ShaderFacade.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -146,9 +158,6 @@
     <ClInclude Include="Header\EEngineTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Header\d3dRenderTargetView.h">
-      <Filter>Header Files\DirectX</Filter>
-    </ClInclude>
     <ClInclude Include="Resources\Date\Include\date.h">
       <Filter>Resource Files\Date\Header</Filter>
     </ClInclude>
@@ -161,11 +170,48 @@
     <ClInclude Include="Header\Logger.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Header\d3dDepthStencilView.h">
-      <Filter>Header Files\DirectX</Filter>
-    </ClInclude>
     <ClInclude Include="Header\EnumUtilities.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Header\ShaderFacade.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\EShaderType.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Box.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\ObjectConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\d3dConstantBufferViewHeap.h">
+      <Filter>Header Files\DirectX\Heaps</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\d3dRenderTargetViewHeap.h">
+      <Filter>Header Files\DirectX\Heaps</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\d3dDepthStencilViewHeap.h">
+      <Filter>Header Files\DirectX\Depth Stencil View</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\d3dDepthStencilView.h">
+      <Filter>Header Files\DirectX\Depth Stencil View</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\Shaders\VS_BasicColour.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PS_BasicColour.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shaders\Common_BasicColour.hlsli">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

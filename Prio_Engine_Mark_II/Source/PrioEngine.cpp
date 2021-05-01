@@ -143,6 +143,32 @@ bool PrioEngine::InitMainWindow()
 	return true;
 }
 
+bool PrioEngine::InitGraphicsAPI()
+{
+	InitialiseDebugLayer();
+	CreateDxgiFactory();
+
+	if (!CreateDirectXDevice())
+	{
+		return false;
+	}
+	InitialiseFence();
+
+	InitialiseDescriptorSizes();
+	InitialiseMultisampling();
+
+#ifdef _DEBUG
+	LogAdapters();
+#endif
+
+	CreateCommandObjects();
+	CreateSwapChain();
+	CreateDescriptorHeaps();
+	BuildConstantBuffers();
+
+	return true;
+}
+
 LRESULT PrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
@@ -325,4 +351,40 @@ void PrioEngine::CalculateFrameStats()
 		frameCnt = 0;
 		timeElapsed += 1.0f;
 	}
+}
+
+void PrioEngine::BuildDefaultShaders()
+{
+	ShaderFacade vsColour = ShaderFacade("../Shaders/", "VS_BasicColour.hlsl", EShaderType::Vertex);
+	vsColour.Compile();
+	mShaders.push_back(vsColour);
+
+	ShaderFacade psColour = ShaderFacade("../Shaders/", "PS_BasicColour.hlsl", EShaderType::Pixel);
+	vsColour.Compile();
+	mShaders.push_back(vsColour);
+}
+
+void PrioEngine::CreateSwapChain()
+{
+	// Release the previous swapchain we will be recreating.
+	mSwapChain.Reset();
+
+	DXGI_SWAP_CHAIN_DESC sd;
+	sd.BufferDesc.Width = mClientWidth;
+	sd.BufferDesc.Height = mClientHeight;
+	sd.BufferDesc.RefreshRate.Numerator = 60;
+	sd.BufferDesc.RefreshRate.Denominator = 1;
+	sd.BufferDesc.Format = mBackBufferFormat;
+	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	sd.SampleDesc.Count = m4xMsaaState ? 4 : 1;
+	sd.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
+	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	sd.BufferCount = SwapChainBufferCount;
+	sd.OutputWindow = mhMainWnd;
+	sd.Windowed = true;
+	sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+	InitSwapChain(sd);
 }

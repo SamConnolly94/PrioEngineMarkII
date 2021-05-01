@@ -2,6 +2,7 @@
 
 #include "EEngineTypes.h"
 #include "ELogVerbosity.h"
+#include "EShaderType.h"
 #include <string>
 
 namespace PrioEngineII
@@ -15,6 +16,7 @@ namespace PrioEngineII
 	public:
 		static std::string ToString(EEngineTypes engineType);
 		static std::string ToString(ELogVerbosity logVerbosity);
+		static std::string ToString(EShaderType shaderType);
 	};
 }
 

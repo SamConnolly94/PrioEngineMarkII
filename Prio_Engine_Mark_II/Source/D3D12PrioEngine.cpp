@@ -13,10 +13,20 @@ D3D12PrioEngine::D3D12PrioEngine(_constructor_tag unique_ptr_tag, HINSTANCE hIns
 }
 
 
-void D3D12PrioEngine::CreateRtvAndDsvDescriptorHeaps()
+void D3D12PrioEngine::CreateDescriptorHeaps()
 {
-	mRenderTargetView = std::make_unique<d3dRenderTargetView<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>>(md3dDevice, EEngineTypes::DX3D12, SwapChainBufferCount);
-	mDepthStencilView = std::make_unique<d3dDepthStencilView<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>>(md3dDevice, EEngineTypes::DX3D12);
+	mRenderTargetViewHeap = std::make_unique<d3dRenderTargetViewHeap<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>>(md3dDevice, EEngineTypes::DX3D12, SwapChainBufferCount);
+	mDepthStencilViewHeap = std::make_unique<d3dDepthStencilViewHeap<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>>(md3dDevice, EEngineTypes::DX3D12);
+	mConstantBufferViewHeap = std::make_unique<d3dConstantBufferViewHeap<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>>(md3dDevice, EEngineTypes::DX3D12);
+}
+
+void D3D12PrioEngine::InitSwapChain(DXGI_SWAP_CHAIN_DESC& sd)
+{
+	// Note: Swap chain uses queue to perform flush.
+	ThrowIfFailed(mdxgiFactory->CreateSwapChain(
+		mCommandQueue.Get(),
+		&sd,
+		mSwapChain.GetAddressOf()));
 }
 
 void D3D12PrioEngine::OnResize()
@@ -35,18 +45,23 @@ void D3D12PrioEngine::OnResize()
 	{
 		mSwapChainBuffer[i].Reset();
 	}
-	mDepthStencilBuffer.Reset();
+	
+	if (nullptr != mDepthStencilBuffer)
+	{
+		mDepthStencilBuffer->GetDepthStencilBufferPtr().Reset();
+	}
 
 	// Resize the swap chain.
 	ThrowIfFailed(mSwapChain->ResizeBuffers(
 		SwapChainBufferCount,
-		mClientWidth, mClientHeight,
+		mClientWidth, 
+		mClientHeight,
 		mBackBufferFormat,
 		DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
 
 	mCurrBackBuffer = 0;
 
-	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(mRenderTargetView->GetHeap()->GetCPUDescriptorHandleForHeapStart());
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(mRenderTargetViewHeap->GetHeap()->GetCPUDescriptorHandleForHeapStart());
 	for (UINT i = 0; i < SwapChainBufferCount; i++)
 	{
 		ThrowIfFailed(mSwapChain->GetBuffer(i, IID_PPV_ARGS(&mSwapChainBuffer[i])));
@@ -55,48 +70,17 @@ void D3D12PrioEngine::OnResize()
 	}
 
 	// Create the depth/stencil buffer and view.
-	D3D12_RESOURCE_DESC depthStencilDesc;
-	depthStencilDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	depthStencilDesc.Alignment = 0;
-	depthStencilDesc.Width = mClientWidth;
-	depthStencilDesc.Height = mClientHeight;
-	depthStencilDesc.DepthOrArraySize = 1;
-	depthStencilDesc.MipLevels = 1;
-
-	// Correction 11/12/2016: SSAO chapter requires an SRV to the depth buffer to read from 
-	// the depth buffer.  Therefore, because we need to create two views to the same resource:
-	//   1. SRV format: DXGI_FORMAT_R24_UNORM_X8_TYPELESS
-	//   2. DSV Format: DXGI_FORMAT_D24_UNORM_S8_UINT
-	// we need to create the depth buffer resource with a typeless format.  
-	depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
-
-	depthStencilDesc.SampleDesc.Count = m4xMsaaState ? 4 : 1;
-	depthStencilDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
-	depthStencilDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	depthStencilDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-
-	D3D12_CLEAR_VALUE optClear;
-	optClear.Format = mDepthStencilFormat;
-	optClear.DepthStencil.Depth = 1.0f;
-	optClear.DepthStencil.Stencil = 0;
-	ThrowIfFailed(md3dDevice->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-		D3D12_HEAP_FLAG_NONE,
-		&depthStencilDesc,
-		D3D12_RESOURCE_STATE_COMMON,
-		&optClear,
-		IID_PPV_ARGS(mDepthStencilBuffer.GetAddressOf())));
-
-	// Create descriptor to mip level 0 of entire resource using the format of the resource.
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	dsvDesc.Format = mDepthStencilFormat;
-	dsvDesc.Texture2D.MipSlice = 0;
-	md3dDevice->CreateDepthStencilView(mDepthStencilBuffer.Get(), &dsvDesc, DepthStencilView());
+	mDepthStencilBuffer = std::make_unique<
+		d3dDepthStencilView<ID3D12Device, ID3D12Resource, D3D12_CPU_DESCRIPTOR_HANDLE>>(md3dDevice,
+			DepthStencilView(),
+			EEngineTypes::DX3D12,
+			mClientWidth,
+			mClientHeight,
+			m4xMsaaState,
+			m4xMsaaQuality);
 
 	// Transition the resource from its initial state to be used as a depth buffer.
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mDepthStencilBuffer.Get(),
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mDepthStencilBuffer->GetDepthStencilBufferPtr().Get(),
 		D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE));
 
 	// Execute the resize commands.
@@ -164,44 +148,14 @@ void D3D12PrioEngine::Draw()
 	FlushCommandQueue();
 }
 
-bool D3D12PrioEngine::InitGraphicsAPI()
+void PrioEngineII::D3D12PrioEngine::InitialiseFence()
 {
-#if defined(DEBUG) || defined(_DEBUG) 
-	// Enable the D3D12 debug layer.
-	{
-		ComPtr<ID3D12Debug> debugController;
-		ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
-		debugController->EnableDebugLayer();
-	}
-#endif
-
-	ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&mdxgiFactory)));
-
-	// Try to create hardware device.
-	HRESULT hardwareResult = D3D12CreateDevice(
-		nullptr,             // default adapter
-		D3D_FEATURE_LEVEL_12_1,
-		IID_PPV_ARGS(&md3dDevice));
-
-	// Fallback to WARP device.
-	if (FAILED(hardwareResult))
-	{
-		ComPtr<IDXGIAdapter> pWarpAdapter;
-		ThrowIfFailed(mdxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pWarpAdapter)));
-
-		ThrowIfFailed(D3D12CreateDevice(
-			pWarpAdapter.Get(),
-			D3D_FEATURE_LEVEL_12_1,
-			IID_PPV_ARGS(&md3dDevice)));
-	}
-
 	ThrowIfFailed(md3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
 		IID_PPV_ARGS(&mFence)));
+}
 
-	mRtvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	mDsvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	mCbvSrvUavDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
+void PrioEngineII::D3D12PrioEngine::InitialiseMultisampling()
+{
 	// Check 4X MSAA quality support for our back buffer format.
 	// All Direct3D 11 capable devices support 4X MSAA for all render 
 	// target formats, so we only need to check quality support.
@@ -218,16 +172,57 @@ bool D3D12PrioEngine::InitGraphicsAPI()
 
 	m4xMsaaQuality = msQualityLevels.NumQualityLevels;
 	assert(m4xMsaaQuality > 0 && "Unexpected MSAA quality level.");
+}
 
-#ifdef _DEBUG
-	LogAdapters();
-#endif
+void PrioEngineII::D3D12PrioEngine::InitialiseDescriptorSizes()
+{
+	mRtvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	mDsvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+	mCbvSrvUavDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
 
-	CreateCommandObjects();
-	CreateSwapChain();
-	CreateRtvAndDsvDescriptorHeaps();
+bool D3D12PrioEngine::CreateDirectXDevice()
+{
+	// Try to create hardware device.
+	HRESULT hardwareResult = D3D12CreateDevice(
+		nullptr,             // default adapter
+		D3D_FEATURE_LEVEL_12_1,
+		IID_PPV_ARGS(&md3dDevice));
 
+	// Fallback to WARP device.
+	if (FAILED(hardwareResult))
+	{
+		ComPtr<IDXGIAdapter> pWarpAdapter;
+		ThrowIfFailed(mdxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pWarpAdapter)));
+
+		ThrowIfFailed(D3D12CreateDevice(
+			pWarpAdapter.Get(),
+			D3D_FEATURE_LEVEL_12_1,
+			IID_PPV_ARGS(&md3dDevice)));
+		Logger::GetInstance()->Write("Unable to create DirectX 12 device.", ELogVerbosity::Error);
+		return false;
+
+	}
+
+	Logger::GetInstance()->Write("Created DirectX 12 Device.", ELogVerbosity::Trace);
 	return true;
+}
+
+void PrioEngineII::D3D12PrioEngine::CreateDxgiFactory()
+{
+	ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&mdxgiFactory)));
+}
+
+void PrioEngineII::D3D12PrioEngine::InitialiseDebugLayer()
+{
+#if defined(DEBUG) || defined(_DEBUG) 
+	// Enable the D3D12 debug layer.
+	{
+		ComPtr<ID3D12Debug> debugController;
+		ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
+		debugController->EnableDebugLayer();
+	}
+#endif
 }
 
 void D3D12PrioEngine::CreateCommandObjects()
@@ -252,35 +247,6 @@ void D3D12PrioEngine::CreateCommandObjects()
 	// to the command list we will Reset it, and it needs to be closed before
 	// calling Reset.
 	mCommandList->Close();
-}
-
-void D3D12PrioEngine::CreateSwapChain()
-{
-	// Release the previous swapchain we will be recreating.
-	mSwapChain.Reset();
-
-	DXGI_SWAP_CHAIN_DESC sd;
-	sd.BufferDesc.Width = mClientWidth;
-	sd.BufferDesc.Height = mClientHeight;
-	sd.BufferDesc.RefreshRate.Numerator = 60;
-	sd.BufferDesc.RefreshRate.Denominator = 1;
-	sd.BufferDesc.Format = mBackBufferFormat;
-	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	sd.SampleDesc.Count = m4xMsaaState ? 4 : 1;
-	sd.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
-	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	sd.BufferCount = SwapChainBufferCount;
-	sd.OutputWindow = mhMainWnd;
-	sd.Windowed = true;
-	sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-
-	// Note: Swap chain uses queue to perform flush.
-	ThrowIfFailed(mdxgiFactory->CreateSwapChain(
-		mCommandQueue.Get(),
-		&sd,
-		mSwapChain.GetAddressOf()));
 }
 
 void D3D12PrioEngine::FlushCommandQueue()
@@ -315,14 +281,14 @@ ID3D12Resource* D3D12PrioEngine::CurrentBackBuffer()const
 D3D12_CPU_DESCRIPTOR_HANDLE D3D12PrioEngine::CurrentBackBufferView() const
 {
 	return CD3DX12_CPU_DESCRIPTOR_HANDLE(
-		mRenderTargetView->GetHeap()->GetCPUDescriptorHandleForHeapStart(),
+		mRenderTargetViewHeap->GetHeap()->GetCPUDescriptorHandleForHeapStart(),
 		mCurrBackBuffer,
 		mRtvDescriptorSize);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE D3D12PrioEngine::DepthStencilView() const
 {
-	return mDepthStencilView->GetHeap()->GetCPUDescriptorHandleForHeapStart();
+	return mDepthStencilViewHeap->GetHeap()->GetCPUDescriptorHandleForHeapStart();
 }
 
 void D3D12PrioEngine::LogAdapters()
@@ -403,4 +369,23 @@ void D3D12PrioEngine::LogOutputDisplayModes(IDXGIOutput* output, DXGI_FORMAT for
 bool D3D12PrioEngine::GraphicsApiInitialised() const
 {
 	return md3dDevice != nullptr;
+}
+
+void D3D12PrioEngine::BuildConstantBuffers()
+{
+	mObjectConstantBuffer = std::make_unique<UploadBuffer<ObjectConstants>>(md3dDevice.Get(), 1, true);
+	UINT objCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+
+	D3D12_GPU_VIRTUAL_ADDRESS cbAddress = mObjectConstantBuffer->Resource()->GetGPUVirtualAddress();
+
+	int boxCBufIndex = 0;
+	cbAddress += boxCBufIndex * objCBByteSize;
+
+	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+	cbvDesc.BufferLocation = cbAddress;
+	cbvDesc.SizeInBytes = d3dUtil::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+
+	md3dDevice->CreateConstantBufferView(
+		&cbvDesc,
+		mConstantBufferViewHeap->GetHeap()->GetCPUDescriptorHandleForHeapStart());
 }
