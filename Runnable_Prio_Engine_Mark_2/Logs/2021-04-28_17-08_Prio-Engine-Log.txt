@@ -1,1 +1,0 @@
-[Trace] 17:08: Creating render target view for DirectX 12

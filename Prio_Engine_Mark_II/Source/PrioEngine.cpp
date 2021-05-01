@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PrioEngine.h"
 #include <WindowsX.h>
+#include "ShaderFacade.h"
 
 using namespace std;
 using namespace DirectX;
@@ -38,6 +39,18 @@ EEngineCodes PrioEngine::Initialise(std::shared_ptr<PrioEngine> engineInstance)
 
 	// Do the initial resize code.
 	OnResize();
+
+	ResetCommandList();
+	BuildConstantBuffers();
+	BuildRootSignature();
+	PrepareShaders();
+	LoadDefaultGeometry();
+	BuildPSO();
+	ExecuteCommandList();
+
+	// Wait until initialization is complete.
+	FlushCommandQueue();
+
 	mTimer->Reset();
 
 	return EEngineCodes::Success;
@@ -72,6 +85,8 @@ bool PrioEngine::IsRunning()
 
 		Quit = msg.message != WM_QUIT;
 	}
+
+	Update();
 
 	return msg.message != WM_QUIT;
 }
@@ -147,13 +162,11 @@ bool PrioEngine::InitGraphicsAPI()
 {
 	InitialiseDebugLayer();
 	CreateDxgiFactory();
-
 	if (!CreateDirectXDevice())
 	{
 		return false;
 	}
 	InitialiseFence();
-
 	InitialiseDescriptorSizes();
 	InitialiseMultisampling();
 
@@ -164,9 +177,18 @@ bool PrioEngine::InitGraphicsAPI()
 	CreateCommandObjects();
 	CreateSwapChain();
 	CreateDescriptorHeaps();
-	BuildConstantBuffers();
-
+	
 	return true;
+}
+
+void PrioEngineII::PrioEngine::PrepareShaders()
+{
+	LoadDefaultShaders();
+	for (auto& Shader : mShaders)
+	{
+		Shader.Compile();
+	}
+	SetShaderInputLayout();
 }
 
 LRESULT PrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -362,6 +384,50 @@ void PrioEngine::BuildDefaultShaders()
 	ShaderFacade psColour = ShaderFacade("../Shaders/", "PS_BasicColour.hlsl", EShaderType::Pixel);
 	vsColour.Compile();
 	mShaders.push_back(vsColour);
+}
+
+void PrioEngineII::PrioEngine::OnMouseDown(WPARAM btnState, int x, int y)
+{
+	mLastMousePos.x = x;
+	mLastMousePos.y = y;
+	SetCapture(mhMainWnd);
+}
+
+void PrioEngineII::PrioEngine::OnMouseUp(WPARAM btnState, int x, int y)
+{
+	ReleaseCapture();
+}
+
+void PrioEngineII::PrioEngine::OnMouseMove(WPARAM btnState, int x, int y)
+{
+	if ((btnState & MK_LBUTTON) != 0)
+	{
+		// Make each pixel correspond to a quarter of a degree.
+		float dx = XMConvertToRadians(0.25f * static_cast<float>(x - mLastMousePos.x));
+		float dy = XMConvertToRadians(0.25f * static_cast<float>(y - mLastMousePos.y));
+
+		// Update angles based on input to orbit camera around box.
+		mTheta += dx;
+		mPhi += dy;
+
+		// Restrict the angle mPhi.
+		mPhi = MathHelper::Clamp(mPhi, 0.1f, MathHelper::Pi - 0.1f);
+	}
+	else if ((btnState & MK_RBUTTON) != 0)
+	{
+		// Make each pixel correspond to 0.005 unit in the scene.
+		float dx = 0.005f * static_cast<float>(x - mLastMousePos.x);
+		float dy = 0.005f * static_cast<float>(y - mLastMousePos.y);
+
+		// Update the camera radius based on input.
+		mRadius += dx - dy;
+
+		// Restrict the radius.
+		mRadius = MathHelper::Clamp(mRadius, 3.0f, 15.0f);
+	}
+
+	mLastMousePos.x = x;
+	mLastMousePos.y = y;
 }
 
 void PrioEngine::CreateSwapChain()

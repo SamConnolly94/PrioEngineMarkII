@@ -58,6 +58,11 @@ namespace PrioEngineII
 			return mDepthStencilBuffer;
 		}
 
+		DXGI_FORMAT GetDepthStencilFormat() const
+		{
+			return mDepthStencilFormat;
+		}
+
 	private:
 		/// <summary>
 		/// Initialises a constant buffer view descriptor, and creates the constant buffer view based on that descriptor.

@@ -14,6 +14,7 @@
 #include "d3dDepthStencilViewHeap.h"
 #include "d3dConstantBufferViewHeap.h"
 #include "d3dDepthStencilView.h"
+#include "Box.h"
 
 // Link necessary d3d12 libraries.
 #pragma comment(lib, "D3D12.lib")
@@ -46,6 +47,7 @@ namespace PrioEngineII
 	protected:
 		virtual void OnResize() override;
 		virtual void Draw() override;
+		virtual void Update() override;
 	protected:
 		virtual void CreateDxgiFactory() override;
 		virtual void InitialiseDebugLayer() override;
@@ -58,6 +60,13 @@ namespace PrioEngineII
 		virtual void LogAdapters() override;
 		virtual void CreateDescriptorHeaps() override;
 		virtual void InitSwapChain(DXGI_SWAP_CHAIN_DESC& sd) override;
+		virtual void BuildRootSignature() override;
+		virtual void LoadDefaultShaders() override;
+		virtual void SetShaderInputLayout() override;
+		virtual void LoadDefaultGeometry() override;
+		virtual void BuildPSO() override;
+		virtual void ResetCommandList() override;
+		virtual void ExecuteCommandList() override;
 
 		ID3D12Resource* CurrentBackBuffer() const;
 		D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView() const;
@@ -70,19 +79,21 @@ namespace PrioEngineII
 		virtual void BuildConstantBuffers() override;
 	protected:
 
-		Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;
-		Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice;
+		ComPtr<IDXGIFactory4> mdxgiFactory;
+		ComPtr<ID3D12Device> md3dDevice;
+		ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
 
-		Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
+		ComPtr<ID3D12Fence> mFence;
 		UINT64 mCurrentFence = 0;
 
-		Microsoft::WRL::ComPtr<ID3D12CommandQueue> mCommandQueue;
-		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> mDirectCmdListAlloc;
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList;
+		ComPtr<ID3D12CommandQueue> mCommandQueue;
+		ComPtr<ID3D12CommandAllocator> mDirectCmdListAlloc;
+		ComPtr<ID3D12GraphicsCommandList> mCommandList;
+
+		ComPtr<ID3D12PipelineState> mPSO = nullptr;
 
 		int mCurrBackBuffer = 0;
 		Microsoft::WRL::ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
-		//Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
 		std::unique_ptr<d3dDepthStencilView<ID3D12Device, ID3D12Resource, D3D12_CPU_DESCRIPTOR_HANDLE>> mDepthStencilBuffer;
 
 		std::unique_ptr<d3dRenderTargetViewHeap<ID3D12Device, ID3D12DescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC>> mRenderTargetViewHeap;
@@ -98,5 +109,8 @@ namespace PrioEngineII
 
 		// Derived class should set these in derived constructor to customize starting values.
 		D3D_DRIVER_TYPE md3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
+
+		std::unique_ptr<Box<ID3D12Device, ID3D12GraphicsCommandList>> mBox;
 	};
 }
+

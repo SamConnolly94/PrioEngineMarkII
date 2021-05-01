@@ -35,6 +35,7 @@ namespace PrioEngineII
 		float GetDeltaTime() const;
 	protected:
 		virtual void Draw() = 0;
+		virtual void Update() = 0;
 		bool InitMainWindow();
 
 		void CalculateFrameStats();
@@ -51,15 +52,24 @@ namespace PrioEngineII
 		virtual void LogAdapters() = 0;
 		virtual void InitSwapChain(DXGI_SWAP_CHAIN_DESC& sd) = 0;
 		virtual void BuildDefaultShaders();
+		virtual void ResetCommandList() = 0;
+		virtual void ExecuteCommandList() = 0;
 
 		// Convenience overrides for handling mouse input.
-		virtual void OnMouseDown(WPARAM btnState, int x, int y) { }
-		virtual void OnMouseUp(WPARAM btnState, int x, int y) { }
-		virtual void OnMouseMove(WPARAM btnState, int x, int y) { }
+		virtual void OnMouseDown(WPARAM btnState, int x, int y);
+		virtual void OnMouseUp(WPARAM btnState, int x, int y);
+
+		virtual void OnMouseMove(WPARAM btnState, int x, int y);
 		virtual bool GraphicsApiInitialised() const = 0;
 		virtual void BuildConstantBuffers() = 0;
+		virtual void BuildRootSignature() = 0;
+		virtual void LoadDefaultShaders() = 0;
+		virtual void SetShaderInputLayout() = 0;
+		virtual void LoadDefaultGeometry() = 0;
+		virtual void BuildPSO() = 0;
 	private:
 		bool InitGraphicsAPI();
+		void PrepareShaders();
 		void CreateSwapChain();
 	protected:
 		Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;
@@ -73,6 +83,7 @@ namespace PrioEngineII
 		DXGI_FORMAT mBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 		static const int SwapChainBufferCount = 2;
 		std::vector<ShaderFacade> mShaders;
+		std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
 
 		// Set true to use 4X MSAA (§4.1.8).  The default is false.
 		bool      m4xMsaaState = false;    // 4X MSAA enabled
@@ -89,5 +100,14 @@ namespace PrioEngineII
 		std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectConstantBuffer = nullptr;
 
 		bool Quit = false;
+		POINT mLastMousePos;
+
+		XMFLOAT4X4 mWorld = MathHelper::Identity4x4();
+		XMFLOAT4X4 mView = MathHelper::Identity4x4();
+		XMFLOAT4X4 mProj = MathHelper::Identity4x4();
+
+		float mTheta = 1.5f * XM_PI;
+		float mPhi = XM_PIDIV4;
+		float mRadius = 5.0f;
 	};
 }

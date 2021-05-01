@@ -202,16 +202,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Shaders\VS_BasicColour.hlsl">
+    <FxCompile Include="Resources\Shaders\DefaultShader.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\PS_BasicColour.hlsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Shaders\Common_BasicColour.hlsli">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

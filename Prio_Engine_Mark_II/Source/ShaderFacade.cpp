@@ -3,14 +3,17 @@
 #include "EnumUtilities.h"
 #include "Logger.h"
 
-PrioEngineII::ShaderFacade::ShaderFacade(std::string directory, std::string filename, EShaderType shaderType)
+using namespace PrioEngineII;
+
+ShaderFacade::ShaderFacade(std::string directory, std::string filename, EShaderType shaderType, bool bDefault/* = false*/)
 {
 	mDirectory = directory;
 	mFilename = filename;
 	mShaderType = shaderType;
+	mDefault = bDefault;
 }
 
-void PrioEngineII::ShaderFacade::Compile()
+void ShaderFacade::Compile()
 {
 	std::string strShaderFile = mDirectory + mFilename;
 	std::wstring wideStrShaderFile(strShaderFile.begin(), strShaderFile.end());
@@ -37,4 +40,24 @@ void PrioEngineII::ShaderFacade::Compile()
 	}
 
 	mShaderByteCode = d3dUtil::CompileShader(wideStrShaderFile, nullptr, shaderType, shaderVersion);
+}
+
+bool ShaderFacade::IsDefault() const
+{
+	return mDefault;
+}
+
+EShaderType ShaderFacade::GetShaderType() const
+{
+	return mShaderType;
+}
+
+ComPtr<ID3DBlob> PrioEngineII::ShaderFacade::GetByteCode() const
+{
+	return mShaderByteCode;
+}
+
+LPVOID ShaderFacade::GetBufferPtr() const
+{
+	return mShaderByteCode->GetBufferPointer();
 }

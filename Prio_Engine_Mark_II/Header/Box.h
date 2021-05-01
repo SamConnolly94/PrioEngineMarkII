@@ -15,9 +15,9 @@ namespace PrioEngineII
 		std::array<Vertex, 8> vertices;
 		std::array<std::uint16_t, 36> indices;
 		std::unique_ptr<MeshGeometry> mBoxGeometry;
-
+		std::string mName;
 	public:
-		Box(DirectXDeviceType& d3dDevice, CommandListType& commandList)
+		Box(ComPtr<DirectXDeviceType> d3dDevice, ComPtr<CommandListType> commandList, std::string& name)
 		{
 			vertices =
 			{
@@ -59,7 +59,8 @@ namespace PrioEngineII
 			};
 
 			mBoxGeometry = std::make_unique<MeshGeometry>();
-			mBoxGeometry->Name = "BoxGeometry";
+			mName = name;
+			mBoxGeometry->Name = mName;
 
 			// Create vertex buffer
 			ThrowIfFailed(D3DCreateBlob(GetVertexBufferByteSize(), &mBoxGeometry->VertexBufferCPU));
@@ -67,12 +68,12 @@ namespace PrioEngineII
 			CopyMemory(mBoxGeometry->VertexBufferCPU->GetBufferPointer(), vertices.data(), GetVertexBufferByteSize());
 
 			// Create index buffer
-			ThrowIfFailed(D3DCreateBlob(indexBufferByteSize, &mBoxGeometry->IndexBufferCPU));
+			ThrowIfFailed(D3DCreateBlob(GetIndexBufferByteSize(), &mBoxGeometry->IndexBufferCPU));
 			// Copy to appropraite area
-			CopyMemory(mBoxGeometry->IndexBufferCPU->GetBufferPointer(), indices.data(), indexBufferByteSize);
+			CopyMemory(mBoxGeometry->IndexBufferCPU->GetBufferPointer(), indices.data(), GetIndexBufferByteSize());
 
 			mBoxGeometry->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(d3dDevice.Get(), commandList.Get(), vertices.data(), GetVertexBufferByteSize(), mBoxGeometry->VertexBufferUploader);
-			mBoxGeometry->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(d3dDevice.Get(), commandList.Get(), indices.data(), ibByteSize, mBoxGeometry->IndexBufferUploader);
+			mBoxGeometry->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(d3dDevice.Get(), commandList.Get(), indices.data(), GetIndexBufferByteSize(), mBoxGeometry->IndexBufferUploader);
 
 			mBoxGeometry->VertexByteStride = sizeof(Vertex);
 			mBoxGeometry->VertexBufferByteSize = GetVertexBufferByteSize();
@@ -80,7 +81,7 @@ namespace PrioEngineII
 			mBoxGeometry->IndexBufferByteSize = GetIndexBufferByteSize();
 
 			SubmeshGeometry submesh;
-			submesh.IndexCount = (UINT)indices.size();
+			submesh.IndexCount = GetIndexCount();
 			submesh.StartIndexLocation = 0;
 			submesh.BaseVertexLocation = 0;
 
@@ -92,9 +93,25 @@ namespace PrioEngineII
 		{
 			return (UINT)vertices.size() * sizeof(Vertex);
 		}
+		
+		constexpr UINT GetIndexCount() const
+		{
+			return (UINT)indices.size();
+		}
+
 		constexpr UINT GetIndexBufferByteSize() const
 		{
-			return (UINT)indices.size() * sizeof(std::uint16_t);
+			return GetIndexCount() * sizeof(std::uint16_t);
+		}
+
+		D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const
+		{
+			return mBoxGeometry->VertexBufferView();
+		}
+
+		D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const
+		{
+			return mBoxGeometry->IndexBufferView();
 		}
 	};
 }
