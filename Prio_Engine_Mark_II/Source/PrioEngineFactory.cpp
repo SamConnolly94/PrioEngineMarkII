@@ -11,7 +11,7 @@ std::shared_ptr<PrioEngine> PrioEngineFactory::CreateEngine(EEngineTypes engineT
 	case EEngineTypes::DX3D12:
 		return D3D12PrioEngine::Factory(hInstance);
 	default:
-		throw EngineCreationException;
+		throw EngineCreationException();
 		break;
 	}
 }
