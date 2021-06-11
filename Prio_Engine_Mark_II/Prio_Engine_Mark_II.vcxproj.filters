@@ -43,9 +43,6 @@
     <Filter Include="Resource Files\LunaCommon">
       <UniqueIdentifier>{efcaea8e-f02e-4bcf-a230-6470b7e47098}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\LunaCommon\Header">
-      <UniqueIdentifier>{dd9e965a-db0a-4c93-a863-15fcaa222ce0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\LunaCommon\Source">
       <UniqueIdentifier>{97a65d83-a789-4d85-8d43-6358dfea1df3}</UniqueIdentifier>
     </Filter>
@@ -66,6 +63,9 @@
     </Filter>
     <Filter Include="Header Files\DirectX\Depth Stencil View">
       <UniqueIdentifier>{6deb8417-3eba-480d-8648-c89f05574b34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\LunaCommon\Header">
+      <UniqueIdentifier>{dd9e965a-db0a-4c93-a863-15fcaa222ce0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

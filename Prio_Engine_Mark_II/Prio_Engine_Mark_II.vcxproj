@@ -112,12 +112,24 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Resources\LunaCommon\Source\Camera.cpp" />
-    <ClCompile Include="Resources\LunaCommon\Source\d3dUtil.cpp" />
-    <ClCompile Include="Resources\LunaCommon\Source\DDSTextureLoader.cpp" />
-    <ClCompile Include="Resources\LunaCommon\Source\GameTimer.cpp" />
-    <ClCompile Include="Resources\LunaCommon\Source\GeometryGenerator.cpp" />
-    <ClCompile Include="Resources\LunaCommon\Source\MathHelper.cpp" />
+    <ClCompile Include="Resources\LunaCommon\Source\Camera.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\d3dUtil.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\DDSTextureLoader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\GameTimer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\GeometryGenerator.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Resources\LunaCommon\Source\MathHelper.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\D3D12PrioEngine.cpp" />
     <ClCompile Include="Source\EnumUtilities.cpp" />
     <ClCompile Include="Source\Logger.cpp" />
