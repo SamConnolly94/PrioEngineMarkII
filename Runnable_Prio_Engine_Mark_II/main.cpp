@@ -1,8 +1,8 @@
 // Runnable_Prio_Engine_Mark_II.cpp : Defines the entry point for the application.
 //
 
+#include "resource.h"
 #include "framework.h"
-#include "Runnable_Prio_Engine_Mark_II.h"
 
 #define MAX_LOADSTRING 100
 

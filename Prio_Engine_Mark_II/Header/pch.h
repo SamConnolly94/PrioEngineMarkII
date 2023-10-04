@@ -9,5 +9,19 @@
 
 // add headers that you want to pre-compile here
 #include "framework.h"
+#include <winerror.h>
+#include <exception>
+
+namespace DX
+{
+    inline void ThrowIfFailed(HRESULT hr)
+    {
+        if (FAILED(hr))
+        {
+            // Set a breakpoint on this line to catch DirectX API errors
+            throw std::exception();
+        }
+    }
+}
 
 #endif //PCH_H

@@ -13,12 +13,21 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Header Files\types">
+      <UniqueIdentifier>{a388e2ab-ffde-4c37-bdbf-2c09344c727f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\maths">
+      <UniqueIdentifier>{156ddbd3-839c-473e-b1bc-48f64692fc22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\maths\types">
+      <UniqueIdentifier>{7483d975-c099-4ce7-8fd4-9dbb8f9e4555}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CPrioEngine.cpp">
+    <ClCompile Include="Source\prioengine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,8 +38,14 @@
     <ClInclude Include="Header\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Header\CPrioEngine.h">
+    <ClInclude Include="Header\prioengine.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\types\graphicsapi.h">
+      <Filter>Header Files\types</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\maths\types\vertex.h">
+      <Filter>Header Files\maths\types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
