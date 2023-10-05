@@ -19,13 +19,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -47,14 +47,14 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
-    <TargetName>dprioenginem2</TargetName>
+    <TargetName>dprioengine2</TargetName>
     <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
-    <TargetName>prioenginem2</TargetName>
+    <TargetName>prioengine2</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -103,11 +103,19 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source\engine\rendering\d3d12renderingengine.cpp" />
+    <ClCompile Include="Source\engine\rendering\exceptions\renderingengineexception.cpp" />
+    <ClCompile Include="Source\engine\rendering\renderingenginebase.cpp" />
     <ClCompile Include="Source\prioengine.cpp" />
     <ClCompile Include="Source\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Header\engine\rendering\d3d12enderingengine.h" />
+    <ClInclude Include="Header\engine\rendering\exceptions\renderingengineexception.h" />
+    <ClInclude Include="Header\engine\rendering\renderingenginebase.h" />
     <ClInclude Include="Header\maths\types\vertex.h" />
+    <ClInclude Include="Header\os\globals.h" />
     <ClInclude Include="Header\prioengine.h" />
     <ClInclude Include="Header\framework.h" />
     <ClInclude Include="Header\pch.h" />

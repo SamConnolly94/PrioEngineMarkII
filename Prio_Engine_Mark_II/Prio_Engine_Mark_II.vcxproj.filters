@@ -22,12 +22,45 @@
     <Filter Include="Header Files\maths\types">
       <UniqueIdentifier>{7483d975-c099-4ce7-8fd4-9dbb8f9e4555}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine">
+      <UniqueIdentifier>{9e6c802c-589a-4fa3-b6f2-4acf73516101}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\rendering">
+      <UniqueIdentifier>{59adad47-474a-46bc-81c0-74a678ab30f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine">
+      <UniqueIdentifier>{8fc28111-cb17-457b-a63d-db93a8547390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\rendering">
+      <UniqueIdentifier>{87485af9-53f3-40a2-91c5-2eba7b39befe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\rendering\exceptions">
+      <UniqueIdentifier>{19a7c0ca-91cf-44b2-9610-7a16a60f2b29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\rendering\exceptions">
+      <UniqueIdentifier>{cedebc2d-66cd-4f20-b178-5515e67c6745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\os">
+      <UniqueIdentifier>{cd5c975b-f535-475c-83e8-2ca1da384df6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\prioengine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\engine\rendering\renderingenginebase.cpp">
+      <Filter>Source Files\engine\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\engine\rendering\d3d12renderingengine.cpp">
+      <Filter>Source Files\engine\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\engine\rendering\exceptions\renderingengineexception.cpp">
+      <Filter>Source Files\engine\rendering\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -46,6 +79,18 @@
     </ClInclude>
     <ClInclude Include="Header\maths\types\vertex.h">
       <Filter>Header Files\maths\types</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\renderingenginebase.h">
+      <Filter>Header Files\engine\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\d3d12enderingengine.h">
+      <Filter>Header Files\engine\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\exceptions\renderingengineexception.h">
+      <Filter>Header Files\engine\rendering\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\os\globals.h">
+      <Filter>Header Files\os</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
