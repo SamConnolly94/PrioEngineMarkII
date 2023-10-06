@@ -47,9 +47,15 @@ BOOL WINAPI DllMain(
 	return TRUE;  // Successful DLL_PROCESS_ATTACH.
 }
 
-CRenderingEngineBase::CRenderingEngineBase()
+CRenderingEngineBase::CRenderingEngineBase(const EGraphicsAPI& graphicsApi)
 {
+	m_GraphicsApi = graphicsApi;
     InitWindow();
+}
+
+EGraphicsAPI CRenderingEngineBase::GetGraphicsAPI() const
+{
+	return m_GraphicsApi;
 }
 
 bool CRenderingEngineBase::InitWindow()

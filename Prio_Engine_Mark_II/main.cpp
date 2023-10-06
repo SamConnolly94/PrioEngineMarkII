@@ -1,6 +1,8 @@
 #include <Windows.h>
 #include <wrl.h>
 
+#include <prioengine.h>
+
 using Microsoft::WRL::ComPtr;
 using namespace std;
 
@@ -9,9 +11,7 @@ LRESULT WINAPI DLLWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK
 MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	// Forward hwnd on because we can get messages (e.g., WM_CREATE)
-	// before CreateWindow returns, and thus before mhMainWnd is valid.
-	return D3DApp::GetApp()->MsgProc(hwnd, msg, wParam, lParam);
+	return CPrioEngine::GetInstance().MsgProc(hwnd, msg, wParam, lParam);
 }
 
 BOOL WINAPI DllMain(
