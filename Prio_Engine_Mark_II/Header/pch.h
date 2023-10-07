@@ -12,7 +12,7 @@
 #include <winerror.h>
 #include <exception>
 
-namespace DX
+namespace PrioEngine
 {
     inline void ThrowIfFailed(HRESULT hr)
     {

@@ -13,9 +13,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Header Files\types">
-      <UniqueIdentifier>{a388e2ab-ffde-4c37-bdbf-2c09344c727f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\maths">
       <UniqueIdentifier>{156ddbd3-839c-473e-b1bc-48f64692fc22}</UniqueIdentifier>
     </Filter>
@@ -43,6 +40,15 @@
     <Filter Include="Header Files\os">
       <UniqueIdentifier>{cd5c975b-f535-475c-83e8-2ca1da384df6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine\rendering\types">
+      <UniqueIdentifier>{a388e2ab-ffde-4c37-bdbf-2c09344c727f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\common">
+      <UniqueIdentifier>{9c3f08bb-a539-4ea2-8347-77d024a6d8b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\common">
+      <UniqueIdentifier>{3eb9451a-99ea-41f8-bdb2-459901233fdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\pch.cpp">
@@ -63,6 +69,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\engine\common\stringconversion.cpp">
+      <Filter>Source Files\engine\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\framework.h">
@@ -73,9 +82,6 @@
     </ClInclude>
     <ClInclude Include="Header\prioengine.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\types\graphicsapi.h">
-      <Filter>Header Files\types</Filter>
     </ClInclude>
     <ClInclude Include="Header\maths\types\vertex.h">
       <Filter>Header Files\maths\types</Filter>
@@ -90,6 +96,15 @@
       <Filter>Header Files\engine\rendering\exceptions</Filter>
     </ClInclude>
     <ClInclude Include="Header\os\globals.h">
+      <Filter>Header Files\os</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\types\graphicsapi.h">
+      <Filter>Header Files\engine\rendering\types</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\common\stringconversion.h">
+      <Filter>Header Files\engine\common</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\os\d3dx12.h">
       <Filter>Header Files\os</Filter>
     </ClInclude>
   </ItemGroup>

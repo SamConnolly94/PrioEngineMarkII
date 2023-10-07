@@ -104,6 +104,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source\engine\common\stringconversion.cpp" />
     <ClCompile Include="Source\engine\rendering\d3d12renderingengine.cpp" />
     <ClCompile Include="Source\engine\rendering\exceptions\renderingengineexception.cpp" />
     <ClCompile Include="Source\engine\rendering\renderingenginebase.cpp" />
@@ -111,15 +112,17 @@
     <ClCompile Include="Source\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Header\engine\common\stringconversion.h" />
     <ClInclude Include="Header\engine\rendering\d3d12enderingengine.h" />
     <ClInclude Include="Header\engine\rendering\exceptions\renderingengineexception.h" />
     <ClInclude Include="Header\engine\rendering\renderingenginebase.h" />
+    <ClInclude Include="Header\engine\rendering\types\graphicsapi.h" />
     <ClInclude Include="Header\maths\types\vertex.h" />
+    <ClInclude Include="Header\os\d3dx12.h" />
     <ClInclude Include="Header\os\globals.h" />
     <ClInclude Include="Header\prioengine.h" />
     <ClInclude Include="Header\framework.h" />
     <ClInclude Include="Header\pch.h" />
-    <ClInclude Include="Header\types\graphicsapi.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
