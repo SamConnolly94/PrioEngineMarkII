@@ -298,6 +298,21 @@ void CD3D12RenderingEngine::Draw()
     FlushCommandQueue();
 }
 
+ID3D12Resource* CD3D12RenderingEngine::CurrentBackBuffer() const
+{
+    return m_SwapChainBuffer[m_CurrentBackBuffer].Get();
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE CD3D12RenderingEngine::CurrentBackBufferView() const
+{
+    return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_RtvHeap->GetCPUDescriptorHandleForHeapStart(), m_CurrentBackBuffer, m_RtvDescriptorSize);
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE CD3D12RenderingEngine::DepthStencilView() const
+{
+    return m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
 #ifdef _DEBUG
 void CD3D12RenderingEngine::LogAdapters()
 {
@@ -335,8 +350,8 @@ void CD3D12RenderingEngine::LogAdapters()
 
 void CD3D12RenderingEngine::LogAdapterOutputs(IDXGIAdapter* adapter)
 {
-    UINT i{ 0 };
-    IDXGIOutput* output{ nullptr };
+    UINT i = 0;
+    IDXGIOutput* output = nullptr;
     while (adapter->EnumOutputs(i, &output) != DXGI_ERROR_NOT_FOUND)
     {
         DXGI_OUTPUT_DESC desc;
@@ -344,25 +359,23 @@ void CD3D12RenderingEngine::LogAdapterOutputs(IDXGIAdapter* adapter)
 
         std::wstring text = L"***Output: ";
         text += desc.DeviceName;
-        text += L"\r\n";
+        text += L"\n";
         OutputDebugString(text.c_str());
 
         LogOutputDisplayModes(output, m_BackBufferFormat);
 
-        if (output)
-        {
-            output->Release();
-            output = nullptr;
-        }
+        ReleaseCom(output);
+
+        ++i;
     }
 }
 
 void CD3D12RenderingEngine::LogOutputDisplayModes(IDXGIOutput* output, DXGI_FORMAT format)
 {
-    UINT count{ 0 };
-    UINT flags{ 0 };
+    UINT count = 0;
+    UINT flags = 0;
 
-    // Calling with nullptr will return the list count
+    // Call with nullptr to get list count.
     output->GetDisplayModeList(format, flags, &count, nullptr);
 
     std::vector<DXGI_MODE_DESC> modeList(count);
@@ -370,12 +383,13 @@ void CD3D12RenderingEngine::LogOutputDisplayModes(IDXGIOutput* output, DXGI_FORM
 
     for (auto& x : modeList)
     {
-        UINT n{ x.RefreshRate.Numerator };
-        UINT d{ x.RefreshRate.Denominator };
-        std::wstring text = L"Width = " + std::to_wstring(x.Width) + L" " +
+        UINT n = x.RefreshRate.Numerator;
+        UINT d = x.RefreshRate.Denominator;
+        std::wstring text =
+            L"Width = " + std::to_wstring(x.Width) + L" " +
             L"Height = " + std::to_wstring(x.Height) + L" " +
             L"Refresh = " + std::to_wstring(n) + L"/" + std::to_wstring(d) +
-            L"\r\n";
+            L"\n";
 
         ::OutputDebugString(text.c_str());
     }

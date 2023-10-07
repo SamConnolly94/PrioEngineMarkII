@@ -12,6 +12,8 @@
 using Microsoft::WRL::ComPtr;
 using namespace std;
 
+HINSTANCE PrioEngine::Globals::OS::gh_InstDll{ NULL };
+
 BOOL WINAPI DllMain(
     HINSTANCE hinstDLL,  // handle to DLL module
     DWORD fdwReason,     // reason for calling function
@@ -62,6 +64,7 @@ void CPrioEngine::CreateInstance(EGraphicsAPI graphicsApi, unsigned int width, u
         // This is currently leaking.
         // Should really clean up, or change to be a solid object.
         m_Instance = new CPrioEngine(graphicsApi, width, height, windowTitle);
+        m_Instance->Initialise();
     }
 }
 
@@ -89,8 +92,6 @@ CPrioEngine::CPrioEngine(EGraphicsAPI graphicsApi, unsigned int width, unsigned 
         throw RenderingEngineNotSupported();
         return;
     }
-
-    InitMainWindow();
 }
 
 bool CPrioEngine::Initialise()
@@ -171,6 +172,8 @@ LRESULT CPrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             m_Paused = false;
             m_Timer->Start();
+            //m_Paused = false;
+            //m_Timer->Start();
         }
         return 0;
 
@@ -234,7 +237,7 @@ LRESULT CPrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         }
         return 0;
     }
-        // WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
+    // WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
     case WM_ENTERSIZEMOVE:
         m_Paused = true;
         m_Resizing = true;

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31005.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Prio_Engine_Mark_II_Tests", "Prio_Engine_Mark_II_Tests\Prio_Engine_Mark_II_Tests.vcxproj", "{C36B656F-EDC0-4490-9D49-1B0C45454872}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -10,7 +10,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Prio_Engine_Mark_II_Tests",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Prio_Engine_Mark_II", "Prio_Engine_Mark_II\Prio_Engine_Mark_II.vcxproj", "{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Runnable_Prio_Engine_Mark_II", "Runnable_Prio_Engine_Mark_II\Runnable_Prio_Engine_Mark_II.vcxproj", "{997AEE47-3358-4EE5-9547-19EB1D7C0FCC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Runnable_Prio_Engine_II", "Runnable_Prio_Engine_II\Runnable_Prio_Engine_II.vcxproj", "{8DE5B8B4-66F5-4718-8ACE-FAC9AB163B40}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347} = {EAFFDBAA-3C95-4372-90AB-CBC7140CC347}
 	EndProjectSection
@@ -18,21 +18,35 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C36B656F-EDC0-4490-9D49-1B0C45454872}.Debug|x64.ActiveCfg = Debug|x64
 		{C36B656F-EDC0-4490-9D49-1B0C45454872}.Debug|x64.Build.0 = Debug|x64
+		{C36B656F-EDC0-4490-9D49-1B0C45454872}.Debug|x86.ActiveCfg = Debug|x64
+		{C36B656F-EDC0-4490-9D49-1B0C45454872}.Debug|x86.Build.0 = Debug|x64
 		{C36B656F-EDC0-4490-9D49-1B0C45454872}.Release|x64.ActiveCfg = Release|x64
 		{C36B656F-EDC0-4490-9D49-1B0C45454872}.Release|x64.Build.0 = Release|x64
+		{C36B656F-EDC0-4490-9D49-1B0C45454872}.Release|x86.ActiveCfg = Release|x64
+		{C36B656F-EDC0-4490-9D49-1B0C45454872}.Release|x86.Build.0 = Release|x64
 		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Debug|x64.ActiveCfg = Debug|x64
 		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Debug|x64.Build.0 = Debug|x64
+		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Debug|x86.ActiveCfg = Debug|x64
+		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Debug|x86.Build.0 = Debug|x64
 		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Release|x64.ActiveCfg = Release|x64
 		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Release|x64.Build.0 = Release|x64
-		{997AEE47-3358-4EE5-9547-19EB1D7C0FCC}.Debug|x64.ActiveCfg = Debug|x64
-		{997AEE47-3358-4EE5-9547-19EB1D7C0FCC}.Debug|x64.Build.0 = Debug|x64
-		{997AEE47-3358-4EE5-9547-19EB1D7C0FCC}.Release|x64.ActiveCfg = Release|x64
-		{997AEE47-3358-4EE5-9547-19EB1D7C0FCC}.Release|x64.Build.0 = Release|x64
+		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Release|x86.ActiveCfg = Release|x64
+		{EAFFDBAA-3C95-4372-90AB-CBC7140CC347}.Release|x86.Build.0 = Release|x64
+		{8DE5B8B4-66F5-4718-8ACE-FAC9AB163B40}.Debug|x64.ActiveCfg = Debug|x64
+		{8DE5B8B4-66F5-4718-8ACE-FAC9AB163B40}.Debug|x64.Build.0 = Debug|x64
+		{8DE5B8B4-66F5-4718-8ACE-FAC9AB163B40}.Debug|x86.ActiveCfg = Debug|Win32
+		{8DE5B8B4-66F5-4718-8ACE-FAC9AB163B40}.Debug|x86.Build.0 = Debug|Win32
+		{8DE5B8B4-66F5-4718-8ACE-FAC9AB163B40}.Release|x64.ActiveCfg = Release|x64
+		{8DE5B8B4-66F5-4718-8ACE-FAC9AB163B40}.Release|x64.Build.0 = Release|x64
+		{8DE5B8B4-66F5-4718-8ACE-FAC9AB163B40}.Release|x86.ActiveCfg = Release|Win32
+		{8DE5B8B4-66F5-4718-8ACE-FAC9AB163B40}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

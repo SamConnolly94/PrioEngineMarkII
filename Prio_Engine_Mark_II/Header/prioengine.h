@@ -21,18 +21,17 @@ public:
     CPrioEngine(CPrioEngine&) = delete;
     void operator=(const CPrioEngine&) = delete;
 
-    static bool HasInstance() { return m_Instance != nullptr; };
-    static void CreateInstance(EGraphicsAPI graphicsApi = EGraphicsAPI::DX12, unsigned int width = 800, unsigned int height = 600, const std::string windowTitle = "Prio Engine II");
-    static CPrioEngine& GetInstance();
-    CPrioEngine(EGraphicsAPI graphicsApi = EGraphicsAPI::DX12, unsigned int width = 800, unsigned int height = 600, const std::string windowTitle = "Prio Engine II");
+    static bool __declspec(dllexport) HasInstance() { return m_Instance != nullptr; };
+    static void __declspec(dllexport) CreateInstance(EGraphicsAPI graphicsApi = EGraphicsAPI::DX12, unsigned int width = 800, unsigned int height = 600, const std::string windowTitle = "Prio Engine II");
+    static __declspec(dllexport) CPrioEngine& GetInstance();
 
     LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
     bool Initialise();
 
-    int GetClientWidth() const { return m_ClientWidth; };
-    int GetClientHeight() const { return m_ClientHeight; };
-    HWND GetWindowHandle() const { return mh_MainWnd; };
-    bool Update();
+    int __declspec(dllexport) GetClientWidth() const { return m_ClientWidth; };
+    int __declspec(dllexport) GetClientHeight() const { return m_ClientHeight; };
+    HWND __declspec(dllexport) GetWindowHandle() const { return mh_MainWnd; };
+    bool __declspec(dllexport) Update();
 
     // Convenience overrides for handling mouse input.
     virtual void OnMouseDown(WPARAM btnState, int x, int y) { }
@@ -40,13 +39,14 @@ public:
     virtual void OnMouseMove(WPARAM btnState, int x, int y) { }
 
 protected:
+    CPrioEngine(EGraphicsAPI graphicsApi = EGraphicsAPI::DX12, unsigned int width = 800, unsigned int height = 600, const std::string windowTitle = "Prio Engine II");
     void OnResize();
 private:
     bool InitMainWindow();
 protected:
     bool m_Paused{ false };
 private:
-    static CPrioEngine* m_Instance;
+    inline static CPrioEngine* m_Instance;
     std::unique_ptr<CRenderingEngineBase> m_RenderingEngine{};
     HWND mh_MainWnd{};
     HINSTANCE mh_Instance{};

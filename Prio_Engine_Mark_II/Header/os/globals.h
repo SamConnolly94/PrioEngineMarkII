@@ -8,7 +8,7 @@ namespace PrioEngine
     {
         namespace OS
         {
-            HINSTANCE gh_InstDll;
+            extern HINSTANCE gh_InstDll;
         }
     }
 }
