@@ -25,7 +25,7 @@ EGraphicsAPI CRenderingEngineBase::GetGraphicsAPI() const
 std::wstring CRenderingEngineBase::CalculateFrameStats(const float& totalTime)
 {
 	static int frameCount = 0;
-	static int timeElapsed = 0.0f;
+	static float timeElapsed = 0.0f;
 
 	frameCount++;
 

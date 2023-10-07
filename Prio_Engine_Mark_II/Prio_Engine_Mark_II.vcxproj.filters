@@ -49,6 +49,12 @@
     <Filter Include="Source Files\engine\common">
       <UniqueIdentifier>{3eb9451a-99ea-41f8-bdb2-459901233fdd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine\rendering\helper">
+      <UniqueIdentifier>{2cd64ad0-ffae-4070-a651-2565fcdd0659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\rendering\helper">
+      <UniqueIdentifier>{cbf6cf9f-e505-489a-a51b-b621959b986e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\pch.cpp">
@@ -66,11 +72,14 @@
     <ClCompile Include="Source\engine\rendering\exceptions\renderingengineexception.cpp">
       <Filter>Source Files\engine\rendering\exceptions</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\engine\common\stringconversion.cpp">
       <Filter>Source Files\engine\common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\engine\timer.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\engine\rendering\helper\d3d12util.cpp">
+      <Filter>Source Files\engine\rendering\helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +115,15 @@
     </ClInclude>
     <ClInclude Include="Header\os\d3dx12.h">
       <Filter>Header Files\os</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\timer.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\helper\d3d12util.h">
+      <Filter>Header Files\engine\rendering\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\helper\ddstextureloader.h">
+      <Filter>Header Files\engine\rendering\helper</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,9 +1,7 @@
 #pragma once
 
+#include <engine/rendering/helper/d3d12util.h>
 #include <engine/rendering/renderingenginebase.h>
-#include <d3d12.h>
-#include <wrl.h>
-#include <dxgi1_4.h>
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -12,9 +10,10 @@
 class CD3D12RenderingEngine : public CRenderingEngineBase
 {
 public:
-    bool InitGraphicsApi() override;
-    Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() const;
+    using CRenderingEngineBase::CRenderingEngineBase;
+
     bool Initialise() override;
+    Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() const;
 protected:
     void CreateCommandObjects();
     void CreateSwapChain();
@@ -64,7 +63,6 @@ private:
     DXGI_FORMAT m_BackBufferFormat{ DXGI_FORMAT_R8G8B8A8_UNORM };
     DXGI_FORMAT m_DepthStencilFormat{ DXGI_FORMAT_D24_UNORM_S8_UINT };
 
-    bool m_4xMsaaState{ false };
     UINT m_4xMsaaQuality{ 0 };
 };
 

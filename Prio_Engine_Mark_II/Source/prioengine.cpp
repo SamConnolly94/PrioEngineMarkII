@@ -1,14 +1,52 @@
 #include <pch.h>
 #include <prioengine.h>
 
+#include <engine/timer.h>
 #include <engine/rendering/d3d12enderingengine.h>
 #include <engine/rendering/exceptions/renderingengineexception.h>
 #include <engine/common/stringconversion.h>
 
-#include <WinUser.h>
+#include <os/globals.h>
+#include <windowsx.h>
 
 using Microsoft::WRL::ComPtr;
 using namespace std;
+
+BOOL WINAPI DllMain(
+    HINSTANCE hinstDLL,  // handle to DLL module
+    DWORD fdwReason,     // reason for calling function
+    LPVOID lpvReserved)  // reserved
+{
+    // Perform actions based on the reason for calling.
+    switch (fdwReason)
+    {
+    case DLL_PROCESS_ATTACH:
+        // Initialize once for each new process.
+        // Return FALSE to fail DLL load.
+        break;
+
+    case DLL_THREAD_ATTACH:
+        // Do thread-specific initialization.
+        break;
+
+    case DLL_THREAD_DETACH:
+        // Do thread-specific cleanup.
+        break;
+
+    case DLL_PROCESS_DETACH:
+
+        if (lpvReserved != nullptr)
+        {
+            break; // do not do cleanup if process termination scenario
+        }
+
+        // Perform any necessary cleanup.
+        break;
+    }
+
+    PrioEngine::Globals::OS::gh_InstDll = hinstDLL;
+    return TRUE;  // Successful DLL_PROCESS_ATTACH.
+}
 
 LRESULT CALLBACK
 MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -20,13 +58,16 @@ void CPrioEngine::CreateInstance(EGraphicsAPI graphicsApi, unsigned int width, u
 {
     if (!m_Instance)
     {
-        m_Instance = std::make_unique<CPrioEngine>(CPrioEngine(graphicsApi, width, height, windowTitle));
+        // TODO:
+        // This is currently leaking.
+        // Should really clean up, or change to be a solid object.
+        m_Instance = new CPrioEngine(graphicsApi, width, height, windowTitle);
     }
 }
 
 CPrioEngine& CPrioEngine::GetInstance()
 {
-    return *m_Instance.get();
+    return *m_Instance;
 }
 
 CPrioEngine::CPrioEngine(EGraphicsAPI graphicsApi, unsigned int width, unsigned int height, const std::string windowTitle)
@@ -34,12 +75,14 @@ CPrioEngine::CPrioEngine(EGraphicsAPI graphicsApi, unsigned int width, unsigned 
     m_WindowTitle = PrioEngine::Common::StringToWideString(windowTitle);
     m_ClientWidth = width;
     m_ClientHeight = height;
+    mh_Instance = PrioEngine::Globals::OS::gh_InstDll;
+    m_Timer = std::make_unique<CTimer>();
 
     switch (graphicsApi)
     {
     case EGraphicsAPI::DX12:
     {
-        m_RenderingEngine = std::make_unique<CD3D12RenderingEngine>();
+        m_RenderingEngine = std::make_unique<CD3D12RenderingEngine>(EGraphicsAPI::DX12);
         break;
     }
     default:
@@ -62,7 +105,7 @@ bool CPrioEngine::Initialise()
         return false;
     }
 
-    m_RenderingEngine->OnResize();
+    OnResize();
 
     return false;
 }
@@ -106,6 +149,11 @@ bool CPrioEngine::InitMainWindow()
     return true;
 }
 
+void CPrioEngine::OnResize()
+{
+    m_RenderingEngine->OnResize();
+}
+
 LRESULT CPrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
@@ -117,17 +165,18 @@ LRESULT CPrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         if (LOWORD(wParam) == WA_INACTIVE)
         {
             m_Paused = true;
-            mTimer.Stop();
+            m_Timer->Stop();
         }
         else
         {
             m_Paused = false;
-            mTimer.Start();
+            m_Timer->Start();
         }
         return 0;
 
         // WM_SIZE is sent when the user resizes the window.  
     case WM_SIZE:
+    {
         // Save the new client area dimensions.
         m_ClientWidth = LOWORD(lParam);
         m_ClientHeight = HIWORD(lParam);
@@ -152,21 +201,21 @@ LRESULT CPrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             {
 
                 // Restoring from minimized state?
-                if (mMinimized)
+                if (m_Minimised)
                 {
-                    mAppPaused = false;
-                    mMinimized = false;
+                    m_Paused = false;
+                    m_Minimised = false;
                     OnResize();
                 }
 
                 // Restoring from maximized state?
-                else if (mMaximized)
+                else if (m_Maximised)
                 {
-                    mAppPaused = false;
-                    mMaximized = false;
+                    m_Paused = false;
+                    m_Maximised = false;
                     OnResize();
                 }
-                else if (mResizing)
+                else if (m_Resizing)
                 {
                     // If user is dragging the resize bars, we do not resize 
                     // the buffers here because as the user continuously 
@@ -184,20 +233,20 @@ LRESULT CPrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             }
         }
         return 0;
-
+    }
         // WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
     case WM_ENTERSIZEMOVE:
-        mAppPaused = true;
-        mResizing = true;
-        mTimer.Stop();
+        m_Paused = true;
+        m_Resizing = true;
+        m_Timer->Stop();
         return 0;
 
         // WM_EXITSIZEMOVE is sent when the user releases the resize bars.
         // Here we reset everything based on the new window dimensions.
     case WM_EXITSIZEMOVE:
-        mAppPaused = false;
-        mResizing = false;
-        mTimer.Start();
+        m_Paused = false;
+        m_Resizing = false;
+        m_Timer->Start();
         OnResize();
         return 0;
 
@@ -237,7 +286,10 @@ LRESULT CPrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             PostQuitMessage(0);
         }
         else if ((int)wParam == VK_F2)
-            Set4xMsaaState(!m4xMsaaState);
+        {
+            // Toggle anti aliasing state
+            m_RenderingEngine->Set4xMsaaState(!m_RenderingEngine->Get4xMsaaState());
+        }
 
         return 0;
     }
@@ -248,7 +300,7 @@ LRESULT CPrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 bool CPrioEngine::Update()
 {
     MSG msg{ 0 };
-    m_Timer.Reset();
+    m_Timer->Reset();
 
     if (msg.message == WM_QUIT)
     {
@@ -264,19 +316,18 @@ bool CPrioEngine::Update()
     // Update game specific stuff
     else
     {
-        m_Timer.Tick();
+        m_Timer->Tick();
 
         if (m_Paused)
         {
-            std::wstring frameStats = m_RenderingEngine->CalculateFrameStats(m_Timer.TotalTime());
+            std::wstring frameStats = m_RenderingEngine->CalculateFrameStats(m_Timer->TotalTime());
 
             if (frameStats != L"")
             {
                 SetWindowText(mh_MainWnd, frameStats.c_str());
             }
 
-            Update(m_Timer);
-            Draw(m_Timer);
+            m_RenderingEngine->Draw();
         }
         else
         {

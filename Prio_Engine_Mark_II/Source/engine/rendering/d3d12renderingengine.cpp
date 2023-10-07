@@ -4,12 +4,6 @@
 #include <prioengine.h>
 #include <engine/rendering/exceptions/renderingengineexception.h>
 
-#include <WindowsX.h>
-#include <d3d12.h>
-#include <dxgi.h>
-#include <os/d3dx12.h>
-#include <DirectXColors.h>
-
 #ifdef _DEBUG
 #include <vector>
 #include <string>
@@ -146,7 +140,7 @@ void CD3D12RenderingEngine::FlushCommandQueue()
 
     if (m_Fence->GetCompletedValue() < m_CurrentFence)
     {
-        HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
+        HANDLE eventHandle = CreateEventEx(nullptr, L"", false, EVENT_ALL_ACCESS);
 
         PrioEngine::ThrowIfFailed(m_Fence->SetEventOnCompletion(m_CurrentFence, eventHandle));
 
