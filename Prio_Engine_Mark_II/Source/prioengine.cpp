@@ -321,7 +321,7 @@ bool CPrioEngine::Update()
     {
         m_Timer->Tick();
 
-        if (m_Paused)
+        if (!m_Paused)
         {
             std::wstring frameStats = m_RenderingEngine->CalculateFrameStats(m_Timer->TotalTime());
 
