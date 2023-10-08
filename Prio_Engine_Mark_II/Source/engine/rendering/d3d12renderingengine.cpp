@@ -313,6 +313,16 @@ D3D12_CPU_DESCRIPTOR_HANDLE CD3D12RenderingEngine::DepthStencilView() const
     return m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
+void CD3D12RenderingEngine::BuildDescriptorHeaps()
+{
+    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
+    cbvHeapDesc.NumDescriptors = 1;
+    cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    cbvHeapDesc.NodeMask = 0;
+    PrioEngine::ThrowIfFailed(m_d3dDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_CbvHeap)));
+}
+
 #ifdef _DEBUG
 void CD3D12RenderingEngine::LogAdapters()
 {

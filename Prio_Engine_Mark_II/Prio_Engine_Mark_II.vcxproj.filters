@@ -55,6 +55,12 @@
     <Filter Include="Source Files\engine\rendering\helper">
       <UniqueIdentifier>{cbf6cf9f-e505-489a-a51b-b621959b986e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine\rendering\mesh">
+      <UniqueIdentifier>{9db26680-2f97-42ae-ab92-da8ac79bdce8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\mesh">
+      <UniqueIdentifier>{7d814eee-44c0-4b66-8a22-a7e6ae818bd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\pch.cpp">
@@ -80,6 +86,9 @@
     </ClCompile>
     <ClCompile Include="Source\engine\rendering\helper\d3d12util.cpp">
       <Filter>Source Files\engine\rendering\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\engine\rendering\mesh\mesh.cpp">
+      <Filter>Source Files\engine\mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="Header\engine\rendering\helper\ddstextureloader.h">
       <Filter>Header Files\engine\rendering\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\mesh\mesh.h">
+      <Filter>Header Files\engine\rendering\mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

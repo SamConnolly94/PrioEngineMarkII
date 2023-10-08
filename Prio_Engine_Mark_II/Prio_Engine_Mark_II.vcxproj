@@ -112,6 +112,7 @@
     <ClCompile Include="Source\engine\rendering\d3d12renderingengine.cpp" />
     <ClCompile Include="Source\engine\rendering\exceptions\renderingengineexception.cpp" />
     <ClCompile Include="Source\engine\rendering\helper\d3d12util.cpp" />
+    <ClCompile Include="Source\engine\rendering\mesh\mesh.cpp" />
     <ClCompile Include="Source\engine\rendering\renderingenginebase.cpp" />
     <ClCompile Include="Source\engine\timer.cpp" />
     <ClCompile Include="Source\prioengine.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="Header\engine\rendering\exceptions\renderingengineexception.h" />
     <ClInclude Include="Header\engine\rendering\helper\d3d12util.h" />
     <ClInclude Include="Header\engine\rendering\helper\ddstextureloader.h" />
+    <ClInclude Include="Header\engine\rendering\mesh\mesh.h" />
     <ClInclude Include="Header\engine\rendering\renderingenginebase.h" />
     <ClInclude Include="Header\engine\rendering\types\graphicsapi.h" />
     <ClInclude Include="Header\engine\timer.h" />

@@ -7,6 +7,8 @@
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
 
+struct MeshGeometry;
+
 class CD3D12RenderingEngine : public CRenderingEngineBase
 {
 public:
@@ -25,6 +27,13 @@ protected:
     ID3D12Resource* CurrentBackBuffer() const;
     D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView() const;
     D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView() const;
+
+    void BuildDescriptorHeaps();
+    void BuildConstantBuffers();
+    void BuildRootSignature();
+    void BuildShadersAndInputLayout();
+    void BuildBoxGeometry();
+    void BuildPSO();
 
 #ifdef _DEBUG
     void LogAdapters();
@@ -64,5 +73,19 @@ private:
     DXGI_FORMAT m_DepthStencilFormat{ DXGI_FORMAT_D24_UNORM_S8_UINT };
 
     UINT m_4xMsaaQuality{ 0 };
+
+    // Further required vars for rendering shapes
+    // I'd like to split this out somewhere outside of the rendering class at some point
+    // Some of it still belongs in here, but other parts definitely do not.
+    ComPtr<ID3D12RootSignature> m_RootSignature{ nullptr };
+    ComPtr<ID3D12DescriptorHeap> m_CbvHeap{ nullptr };
+
+    std::unique_ptr<UploadBuffer<ObjectConstants>> m_ObjectCB = nullptr;
+
+    std::unique_ptr<MeshGeometry> m_BoxGeometry{ nullptr };
+
+    ComPtr<ID3DBlob> m_vsByteCode{ nullptr };
+    ComPtr<ID3DBlob> m_psByteCode{ nullptr };
+
 };
 
