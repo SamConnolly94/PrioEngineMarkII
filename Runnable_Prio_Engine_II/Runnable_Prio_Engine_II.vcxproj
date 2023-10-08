@@ -104,7 +104,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>copy /Y "C:\Users\samco\source\repos\PrioEngineMarkII\Prio_Engine_Mark_II\Build\$(Platform)\$(Configuration)\dprioengine2.dll" "$(SolutionDir)$(ProjectName)\Build\$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /Y "$(SolutionDir)Prio_Engine_Mark_II\Build\$(Platform)\$(Configuration)\dprioengine2.dll" "$(SolutionDir)$(ProjectName)\Build\$(Platform)\$(Configuration)\"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,7 +141,7 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>copy /Y "C:\Users\samco\source\repos\PrioEngineMarkII\Prio_Engine_Mark_II\Build\$(Platform)\$(Configuration)\dprioengine2.dll" "$(SolutionDir)$(ProjectName)\Build\$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /Y "$(SolutionDir)Prio_Engine_Mark_II\Build\$(Platform)\$(Configuration)\dprioengine2.dll" "$(SolutionDir)$(ProjectName)\Build\$(Platform)\$(Configuration)\"</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>Copying the Prio Engine DLL to the working directory.</Message>
