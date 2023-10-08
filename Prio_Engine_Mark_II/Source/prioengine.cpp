@@ -64,7 +64,10 @@ void CPrioEngine::CreateInstance(EGraphicsAPI graphicsApi, unsigned int width, u
         // This is currently leaking.
         // Should really clean up, or change to be a solid object.
         m_Instance = new CPrioEngine(graphicsApi, width, height, windowTitle);
-        m_Instance->Initialise();
+        if (!m_Instance->Initialise())
+        {
+            throw exception("Engine not intiialised.");
+        }
     }
 }
 
@@ -107,8 +110,9 @@ bool CPrioEngine::Initialise()
     }
 
     OnResize();
+    m_Timer->Reset();
 
-    return false;
+    return true;
 }
 
 bool CPrioEngine::InitMainWindow()
@@ -172,8 +176,6 @@ LRESULT CPrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             m_Paused = false;
             m_Timer->Start();
-            //m_Paused = false;
-            //m_Timer->Start();
         }
         return 0;
 
@@ -303,7 +305,6 @@ LRESULT CPrioEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 bool CPrioEngine::Update()
 {
     MSG msg{ 0 };
-    m_Timer->Reset();
 
     if (msg.message == WM_QUIT)
     {
@@ -323,12 +324,13 @@ bool CPrioEngine::Update()
 
         if (!m_Paused)
         {
+#ifdef _DEBUG
             std::wstring frameStats = m_RenderingEngine->CalculateFrameStats(m_Timer->TotalTime());
-
             if (frameStats != L"")
             {
                 SetWindowText(mh_MainWnd, frameStats.c_str());
             }
+#endif
 
             m_RenderingEngine->Draw();
         }
