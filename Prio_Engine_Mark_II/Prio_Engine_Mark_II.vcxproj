@@ -117,10 +117,12 @@
     <ClCompile Include="Source\engine\timer.cpp" />
     <ClCompile Include="Source\prioengine.cpp" />
     <ClCompile Include="Source\pch.cpp" />
+    <ClCompile Include="uploadbuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\engine\common\stringconversion.h" />
     <ClInclude Include="Header\engine\rendering\d3d12enderingengine.h" />
+    <ClInclude Include="Header\engine\rendering\d3d12\uploadbuffer.h" />
     <ClInclude Include="Header\engine\rendering\exceptions\renderingengineexception.h" />
     <ClInclude Include="Header\engine\rendering\helper\d3d12util.h" />
     <ClInclude Include="Header\engine\rendering\helper\ddstextureloader.h" />

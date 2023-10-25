@@ -23,5 +23,8 @@ public:
     virtual bool Initialise() = 0;
 protected:
     EGraphicsAPI m_GraphicsApi;
+private:
+    int m_FrameCount{ 0 };
+    float m_TimeElapsed{ 0.0f };
 };
 

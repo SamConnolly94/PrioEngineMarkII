@@ -61,6 +61,12 @@
     <Filter Include="Source Files\engine\mesh">
       <UniqueIdentifier>{7d814eee-44c0-4b66-8a22-a7e6ae818bd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine\rendering\d3d12">
+      <UniqueIdentifier>{c8218fcc-6484-48aa-b641-32494a8821a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\rendering\d3d12">
+      <UniqueIdentifier>{1f2ae098-3d35-4d68-a3df-2c18dbf70e8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\pch.cpp">
@@ -89,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="Source\engine\rendering\mesh\mesh.cpp">
       <Filter>Source Files\engine\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="uploadbuffer.cpp">
+      <Filter>Source Files\engine\rendering\d3d12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="Header\engine\rendering\mesh\mesh.h">
       <Filter>Header Files\engine\rendering\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\d3d12\uploadbuffer.h">
+      <Filter>Header Files\engine\rendering\d3d12</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

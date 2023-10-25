@@ -3,6 +3,9 @@
 
 #include <prioengine.h>
 #include <engine/rendering/exceptions/renderingengineexception.h>
+#include <engine/rendering/d3d12/uploadbuffer.h>
+
+#include <memory>
 
 #ifdef _DEBUG
 #include <vector>
@@ -28,61 +31,61 @@ bool CD3D12RenderingEngine::Initialise()
     }
 #endif
 
-    // Initialise the factory used for creating devices
-    PrioEngine::ThrowIfFailed(CreateDXGIFactory(IID_PPV_ARGS(&m_dxgiFactory)));
+// Initialise the factory used for creating devices
+PrioEngine::ThrowIfFailed(CreateDXGIFactory(IID_PPV_ARGS(&m_dxgiFactory)));
 
-    // Initialise the device
-    HRESULT hardwareResult = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_d3dDevice));
+// Initialise the device
+HRESULT hardwareResult = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_d3dDevice));
 
-    // Fallback to Windows Advanced Rasterization Platform (WARP) device
-    if (FAILED(hardwareResult))
-    {
-        ComPtr<IDXGIAdapter> pWarpAdapter;
-        PrioEngine::ThrowIfFailed(m_dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pWarpAdapter)));
+// Fallback to Windows Advanced Rasterization Platform (WARP) device
+if (FAILED(hardwareResult))
+{
+    ComPtr<IDXGIAdapter> pWarpAdapter;
+    PrioEngine::ThrowIfFailed(m_dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pWarpAdapter)));
 
-        PrioEngine::ThrowIfFailed(D3D12CreateDevice(
-            pWarpAdapter.Get(),
-            D3D_FEATURE_LEVEL_11_0,
-            IID_PPV_ARGS(&m_d3dDevice)));
-    }
+    PrioEngine::ThrowIfFailed(D3D12CreateDevice(
+        pWarpAdapter.Get(),
+        D3D_FEATURE_LEVEL_11_0,
+        IID_PPV_ARGS(&m_d3dDevice)));
+}
 
-    // TODO:
-    // What's a fence again in this context? Can't really remember.
-    PrioEngine::ThrowIfFailed(m_d3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
-        IID_PPV_ARGS(&m_Fence)));
+// TODO:
+// What's a fence again in this context? Can't really remember.
+PrioEngine::ThrowIfFailed(m_d3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
+    IID_PPV_ARGS(&m_Fence)));
 
-    m_RtvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    m_DsvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-    m_CbvSrvUavDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+m_RtvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+m_DsvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+m_CbvSrvUavDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-    // Checking for 4x MSAA support for back buffer.
-    // Everything above DX11 should have this.
+// Checking for 4x MSAA support for back buffer.
+// Everything above DX11 should have this.
 
-    D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
-    msQualityLevels.Format = m_BackBufferFormat;
-    msQualityLevels.SampleCount = 4;
-    msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
-    msQualityLevels.NumQualityLevels = 0;
-    PrioEngine::ThrowIfFailed(m_d3dDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels, sizeof(msQualityLevels)));
+D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
+msQualityLevels.Format = m_BackBufferFormat;
+msQualityLevels.SampleCount = 4;
+msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
+msQualityLevels.NumQualityLevels = 0;
+PrioEngine::ThrowIfFailed(m_d3dDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels, sizeof(msQualityLevels)));
 
-    m_4xMsaaQuality = msQualityLevels.NumQualityLevels;
-    if (m_4xMsaaQuality <= 0)
-    {
-        throw UnexpectedMsaaQualityLevels();
-    }
+m_4xMsaaQuality = msQualityLevels.NumQualityLevels;
+if (m_4xMsaaQuality <= 0)
+{
+    throw UnexpectedMsaaQualityLevels();
+}
 
 #ifdef _DEBUG
-    LogAdapters();
+LogAdapters();
 #endif
 
-    CreateCommandObjects();
-    CreateSwapChain();
-    CreateRtvAndDsvDescriptorHeaps();
+CreateCommandObjects();
+CreateSwapChain();
+CreateRtvAndDsvDescriptorHeaps();
 
-    // Do the initial resize code.
-    OnResize();
+// Do the initial resize code.
+OnResize();
 
-    return true;
+return true;
 }
 
 void CD3D12RenderingEngine::CreateCommandObjects()
@@ -321,6 +324,62 @@ void CD3D12RenderingEngine::BuildDescriptorHeaps()
     cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     cbvHeapDesc.NodeMask = 0;
     PrioEngine::ThrowIfFailed(m_d3dDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_CbvHeap)));
+}
+
+void CD3D12RenderingEngine::BuildConstantBuffers()
+{
+    m_ObjectCB = std::make_unique<CUploadBuffer<PrioEngine::ObjectConstants>>(m_d3dDevice.Get(), 1, true);
+
+    UINT objCBBufferSize = d3dUtil::CalcConstantBufferByteSize(sizeof(PrioEngine::ObjectConstants));
+    D3D12_GPU_VIRTUAL_ADDRESS cbAddress = m_ObjectCB->Resource()->GetGPUVirtualAddress();
+
+    int boxCbufIndex = 0;
+    cbAddress += boxCbufIndex * objCBBufferSize;
+
+    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+    cbvDesc.BufferLocation = cbAddress;
+    cbvDesc.SizeInBytes = objCBBufferSize;
+
+    m_d3dDevice->CreateConstantBufferView(&cbvDesc, m_CbvHeap->GetCPUDescriptorHandleForHeapStart());
+}
+
+void CD3D12RenderingEngine::BuildRootSignature()
+{
+    // The root sig defines the resources the shader will expect.
+    // Resources can be considered any input we will provide to the shader.
+    CD3DX12_ROOT_PARAMETER slotRootParameter[1];
+
+    // Create a single descriptor of CBVs
+    CD3DX12_DESCRIPTOR_RANGE cbvTable;
+    cbvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+    slotRootParameter[0].InitAsDescriptorTable(1, &cbvTable);
+
+    // A root signature is an array of paramaters
+    CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(1, slotRootParameter, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+    // Create a root sig with a single slot which points to the desc range consisting of a single constant buffer
+    ComPtr<ID3DBlob> serialisedRootSig = nullptr;
+    ComPtr<ID3DBlob> errorBlob = nullptr;
+    HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, serialisedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
+
+    if (errorBlob != nullptr)
+    {
+        ::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+    }
+    PrioEngine::ThrowIfFailed(hr);
+
+    PrioEngine::ThrowIfFailed(m_d3dDevice->CreateRootSignature(0,
+        serialisedRootSig->GetBufferPointer(),
+        serialisedRootSig->GetBufferSize(),
+        IID_PPV_ARGS(&m_RootSignature))
+    );
+}
+
+void CD3D12RenderingEngine::BuildShadersAndInputLayout()
+{
+    HRESULT hr = S_OK;
+
+    mVsByteCode;
 }
 
 #ifdef _DEBUG

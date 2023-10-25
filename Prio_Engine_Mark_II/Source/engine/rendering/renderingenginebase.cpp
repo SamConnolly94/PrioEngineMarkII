@@ -24,24 +24,21 @@ EGraphicsAPI CRenderingEngineBase::GetGraphicsAPI() const
 
 std::wstring CRenderingEngineBase::CalculateFrameStats(const float& totalTime)
 {
-	static int frameCount = 0;
-	static float timeElapsed = 0.0f;
-
-	frameCount++;
-
+	m_FrameCount++;
 	constexpr float kCalculationPeriod = 1.0f;
+
 	// Compute averages over X second period
-	if (totalTime - timeElapsed >= kCalculationPeriod)
+	if (totalTime - m_TimeElapsed >= kCalculationPeriod)
 	{
-		float fps = (float)frameCount;
+		float fps = (float)m_FrameCount;
 		float mspf = 1000.0f / fps;
 
 		std::wstring fpsStr = std::to_wstring(fps);
 		std::wstring mspfStr = std::to_wstring(mspf);
 
 		// Reset for next average.
-		frameCount = 0;
-		timeElapsed += 1.0f;
+		m_FrameCount = 0;
+		m_TimeElapsed += 1.0f;
 
 		return L"FPS: " + fpsStr + L"    MSPF: " + mspfStr;
 	}

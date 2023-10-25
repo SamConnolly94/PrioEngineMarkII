@@ -2,12 +2,16 @@
 
 #include <engine/rendering/helper/d3d12util.h>
 #include <engine/rendering/renderingenginebase.h>
+#include <engine/common/objectconstants.h>
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
 
 struct MeshGeometry;
+
+template <typename T>
+class CUploadBuffer;
 
 class CD3D12RenderingEngine : public CRenderingEngineBase
 {
@@ -80,7 +84,7 @@ private:
     ComPtr<ID3D12RootSignature> m_RootSignature{ nullptr };
     ComPtr<ID3D12DescriptorHeap> m_CbvHeap{ nullptr };
 
-    std::unique_ptr<UploadBuffer<ObjectConstants>> m_ObjectCB = nullptr;
+    std::unique_ptr<CUploadBuffer<PrioEngine::ObjectConstants>> m_ObjectCB = nullptr;
 
     std::unique_ptr<MeshGeometry> m_BoxGeometry{ nullptr };
 
