@@ -9,6 +9,7 @@ namespace PrioEngine
         struct Vector3
         {
             Vector3(float x, float y, float z) : m_X(x), m_Y(y), m_Z(z) {};
+            Vector3(const Vector3& other) : m_X(other.m_X), m_Y(other.m_Y), m_Z(other.m_Z) {};
 
             float m_X{ 0.0f };
             float m_Y{ 0.0f };

@@ -1,14 +1,14 @@
 #pragma once
 
-#include <DirectXMath.h>
+#include <maths/vector3.h>
 
 namespace PrioEngine
 {
-    namespace Math
+    namespace Maths
     {
         struct Vertex
         {
-            DirectX::XMFLOAT3 m_Position;
+            PrioEngine::Maths::Vector3 m_Position;
             DirectX::XMFLOAT4 m_Colour;
         };
     }
