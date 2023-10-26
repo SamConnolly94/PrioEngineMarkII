@@ -67,6 +67,21 @@
     <Filter Include="Source Files\engine\rendering\d3d12">
       <UniqueIdentifier>{1f2ae098-3d35-4d68-a3df-2c18dbf70e8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\maths\common">
+      <UniqueIdentifier>{afe3ecd2-d98e-457e-bff2-5dab87e9a592}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\maths">
+      <UniqueIdentifier>{5bf63263-3a81-424c-b216-38bdf75e0794}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\maths\common">
+      <UniqueIdentifier>{9c6fafe2-1ffc-45d2-a8f2-b4240d2aa727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\rendering\shapes">
+      <UniqueIdentifier>{55294637-abb5-42fa-a9d7-813602a21062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\rendering\shapes">
+      <UniqueIdentifier>{31ba9735-372b-4595-a434-273497649f4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\pch.cpp">
@@ -98,6 +113,18 @@
     </ClCompile>
     <ClCompile Include="uploadbuffer.cpp">
       <Filter>Source Files\engine\rendering\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\maths\common\matrixhelper.cpp">
+      <Filter>Source Files\maths\common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\engine\rendering\d3d12\common\shaderutil.cpp">
+      <Filter>Source Files\engine\rendering\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\maths\vector2.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\maths\vector3.cpp">
+      <Filter>Source Files\maths</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +175,21 @@
     </ClInclude>
     <ClInclude Include="Header\engine\rendering\d3d12\uploadbuffer.h">
       <Filter>Header Files\engine\rendering\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\common\objectconstants.h">
+      <Filter>Header Files\engine\common</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\maths\common\matrixhelper.h">
+      <Filter>Header Files\maths\common</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\d3d12\common\shaderutil.h">
+      <Filter>Header Files\engine\rendering\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\maths\vector3.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\maths\vector2.h">
+      <Filter>Header Files\maths</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

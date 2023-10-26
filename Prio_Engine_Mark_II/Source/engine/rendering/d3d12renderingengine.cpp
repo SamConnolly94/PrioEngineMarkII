@@ -3,6 +3,7 @@
 
 #include <prioengine.h>
 #include <engine/rendering/exceptions/renderingengineexception.h>
+#include <engine/rendering/d3d12/common/shaderutil.h>
 #include <engine/rendering/d3d12/uploadbuffer.h>
 
 #include <memory>
@@ -379,7 +380,47 @@ void CD3D12RenderingEngine::BuildShadersAndInputLayout()
 {
     HRESULT hr = S_OK;
 
-    mVsByteCode;
+    using PrioEngine::Rendering::D3D12::CompileShader;
+
+    m_vsByteCode = CompileShader(L"Shaders\\color.hlsl", nullptr, "VS", "vs_5_0");
+    m_psByteCode = CompileShader(L"Shaders\\color.hlsl", nullptr, "PS", "ps_5_0");
+
+    m_InputLayout =
+    {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
+    }
+
+}
+
+void CD3D12RenderingEngine::BuildPSO()
+{
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc;
+    ZeroMemory(&psoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+    psoDesc.InputLayout = { m_InputLayout.data(), (UINT)m_InputLayout.size() };
+    psoDesc.pRootSignature = m_RootSignature.Get();
+    psoDesc.VS =
+    {
+        reinterpret_cast<BYTE*>(m_vsByteCode->GetBufferPointer()),
+        m_vsByteCode->GetBufferSize()
+    };
+
+    psoDesc.PS =
+    {
+        reinterpret_cast<BYTE*>(m_psByteCode->GetBufferPointer()),
+        m_psByteCode->GetBufferSize()
+    };
+    psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+    psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+    psoDesc.SampleMask = UINT_MAX;
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    psoDesc.NumRenderTargets = 1;
+    psoDesc.RTVFormats[0] = m_BackBufferFormat;
+    psoDesc.SampleDesc.Count = m_4xMsaaQuality ? 4 : 1;
+    psoDesc.SampleDesc.Quality = m_4xMsaaQuality ? (m_4xMsaaState - 1) : 0;
+    psoDesc.DSVFormat = m_DepthStencilFormat;
+    PrioEngine::ThrowIfFailed(m_d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_PSO)));
 }
 
 #ifdef _DEBUG
