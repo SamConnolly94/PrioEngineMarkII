@@ -2,15 +2,19 @@
 
 #include <array>
 
-struct Vertex;
-
 namespace PrioEngine
 {
+    namespace Maths
+    {
+        struct Vertex;
+    }
+
     class CBox
     {
     public:
         CBox();
     private:
-        std::array<Vertex, 8> m_Vertices;
+        std::array<Maths::Vertex, 8> m_Vertices;
+        std::array<std::uint16_t, 36> m_Indices;
     };
 }

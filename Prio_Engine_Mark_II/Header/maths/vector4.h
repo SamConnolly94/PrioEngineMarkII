@@ -12,7 +12,7 @@ namespace PrioEngine
         {
             Vector4(float x, float y, float z, float w) : m_X(x), m_Y(y), m_Z(z), m_W(w) {};
             Vector4(const Vector4& other) : m_X(other.m_X), m_Y(other.m_Y), m_Z(other.m_Z), m_W(other.m_W) {};
-            Vector4(const Vector3& other);;
+            Vector4(const Vector3& other);
 
             float m_X{ 0.0f };
             float m_Y{ 0.0f };
