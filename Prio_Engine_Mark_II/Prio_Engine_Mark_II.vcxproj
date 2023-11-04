@@ -108,20 +108,22 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Header\maths\vector4.cpp" />
     <ClCompile Include="Source\engine\common\stringconversion.cpp" />
     <ClCompile Include="Source\engine\rendering\d3d12renderingengine.cpp" />
     <ClCompile Include="Source\engine\rendering\d3d12\common\shaderutil.cpp" />
+    <ClCompile Include="Source\engine\rendering\d3d12\uploadbuffer.cpp" />
     <ClCompile Include="Source\engine\rendering\exceptions\renderingengineexception.cpp" />
     <ClCompile Include="Source\engine\rendering\helper\d3d12util.cpp" />
     <ClCompile Include="Source\engine\rendering\mesh\mesh.cpp" />
     <ClCompile Include="Source\engine\rendering\renderingenginebase.cpp" />
+    <ClCompile Include="Source\engine\rendering\shapes\box.cpp" />
     <ClCompile Include="Source\engine\timer.cpp" />
     <ClCompile Include="Source\maths\common\matrixhelper.cpp" />
     <ClCompile Include="Source\maths\vector2.cpp" />
     <ClCompile Include="Source\maths\vector3.cpp" />
     <ClCompile Include="Source\prioengine.cpp" />
     <ClCompile Include="Source\pch.cpp" />
-    <ClCompile Include="uploadbuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\engine\common\objectconstants.h" />
@@ -134,12 +136,15 @@
     <ClInclude Include="Header\engine\rendering\helper\ddstextureloader.h" />
     <ClInclude Include="Header\engine\rendering\mesh\mesh.h" />
     <ClInclude Include="Header\engine\rendering\renderingenginebase.h" />
+    <ClInclude Include="Header\engine\rendering\shapes\box.h" />
+    <ClInclude Include="Header\engine\rendering\types\colour.h" />
     <ClInclude Include="Header\engine\rendering\types\graphicsapi.h" />
     <ClInclude Include="Header\engine\timer.h" />
     <ClInclude Include="Header\maths\common\matrixhelper.h" />
     <ClInclude Include="Header\maths\types\vertex.h" />
     <ClInclude Include="Header\maths\vector2.h" />
     <ClInclude Include="Header\maths\vector3.h" />
+    <ClInclude Include="Header\maths\vector4.h" />
     <ClInclude Include="Header\os\d3dx12.h" />
     <ClInclude Include="Header\os\globals.h" />
     <ClInclude Include="Header\prioengine.h" />

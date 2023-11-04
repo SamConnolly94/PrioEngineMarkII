@@ -3,7 +3,7 @@
 
 namespace PrioEngine
 {
-    namespace Maths
+    namespace Math
     {
         Vector2& Vector2::operator=(const Vector2& other)
         {

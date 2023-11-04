@@ -5,7 +5,7 @@
 
 namespace PrioEngine
 {
-    namespace Maths
+    namespace Math
     {
         float Vector3::DotProduct(const Vector3& a, const Vector3& b)
         {

@@ -5,25 +5,25 @@
 
 using namespace PrioEngine;
 using namespace DirectX;
-using namespace PrioEngine::Maths;
+using namespace PrioEngine::Math;
 
 namespace PrioEngine
 {
     CBox::CBox()
     {
         m_Vertices = {
-        Vertex(Vector3{-1.0f, -1.0f, -1.0f}, Colour{Colors::White}),
-        Vertex(Vector3{-1.0f, +1.0f, -1.0f }, Colour{ Colors::Black }),
-        Vertex(Vector3(+1.0f, +1.0f, -1.0f), Colour(Colors::Red)),
-        Vertex(Vector3(+1.0f, -1.0f, -1.0f), Colour(Colors::Green)),
-        Vertex(Vector3(-1.0f, -1.0f, +1.0f), Colour(Colors::Blue)),
-        Vertex(Vector3(-1.0f, +1.0f, +1.0f), Colour(Colors::Yellow)),
-        Vertex(Vector3(+1.0f, +1.0f, +1.0f), Colour(Colors::Cyan)),
-        Vertex(Vector3(+1.0f, -1.0f, +1.0f), Colour(Colors::Magenta))
+            Vertex(Vector3{-1.0f, -1.0f, -1.0f}, Colour{Colors::White}),
+            Vertex(Vector3{-1.0f, +1.0f, -1.0f }, Colour{ Colors::Black }),
+            Vertex(Vector3(+1.0f, +1.0f, -1.0f), Colour(Colors::Red)),
+            Vertex(Vector3(+1.0f, -1.0f, -1.0f), Colour(Colors::Green)),
+            Vertex(Vector3(-1.0f, -1.0f, +1.0f), Colour(Colors::Blue)),
+            Vertex(Vector3(-1.0f, +1.0f, +1.0f), Colour(Colors::Yellow)),
+            Vertex(Vector3(+1.0f, +1.0f, +1.0f), Colour(Colors::Cyan)),
+            Vertex(Vector3(+1.0f, -1.0f, +1.0f), Colour(Colors::Magenta))
         };
 
         m_Indices = {
-			// front face
+            // front face
             0, 1, 2,
             0, 2, 3,
 
@@ -47,8 +47,25 @@ namespace PrioEngine
             4, 0, 3,
             4, 3, 7
         };
+    }
 
-        // TODO:
-        // Up to the "Build Geometry" method.
+    UINT CBox::GetVertexBufferByteSize() const
+    {
+        return (UINT)m_Vertices.size() * sizeof(Vertex);
+    }
+
+    UINT CBox::GetIndexBuferByteSize() const
+    {
+        return (UINT)m_Indices.size() * sizeof(std::uint16_t);
+    }
+
+    std::array<Math::Vertex, 8> CBox::GetVertices() const
+    {
+        return m_Vertices;
+    }
+
+    std::array<std::uint16_t, 36> CBox::GetIndices() const
+    {
+        return m_Indices;
     }
 }

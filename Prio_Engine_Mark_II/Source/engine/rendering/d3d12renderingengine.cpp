@@ -5,6 +5,9 @@
 #include <engine/rendering/exceptions/renderingengineexception.h>
 #include <engine/rendering/d3d12/common/shaderutil.h>
 #include <engine/rendering/d3d12/uploadbuffer.h>
+#include <engine/rendering/shapes/box.h>
+#include <engine/rendering/mesh/mesh.h>
+#include <maths/types/vertex.h> // TODO: Remove include when removing cube rendering code from this file
 
 #include <memory>
 
@@ -85,6 +88,28 @@ CreateRtvAndDsvDescriptorHeaps();
 
 // Do the initial resize code.
 OnResize();
+
+
+// TODO:
+// Do these all really belong here?
+// I think we can break these up better
+    // Reset the command list to prep for initialization commands.
+PrioEngine::ThrowIfFailed(m_CommandList->Reset(m_DirectCmdListAlloc.Get(), nullptr));
+
+BuildDescriptorHeaps();
+BuildConstantBuffers();
+BuildRootSignature();
+BuildShadersAndInputLayout();
+BuildBoxGeometry();
+BuildPSO();
+
+// Execute the initialization commands.
+PrioEngine::ThrowIfFailed(m_CommandList->Close());
+ID3D12CommandList* cmdsLists[] = { m_CommandList.Get() };
+m_CommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+// Wait until initialization is complete.
+FlushCommandQueue();
 
 return true;
 }
@@ -391,6 +416,42 @@ void CD3D12RenderingEngine::BuildShadersAndInputLayout()
         {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
     }
 
+}
+
+void CD3D12RenderingEngine::BuildBoxGeometry()
+{
+    m_Box = std::make_unique<PrioEngine::CBox>();
+
+    // TODO:
+    // Might make more sense to separate this geo into the box itself, and have a specific D3D12 impl of that box.
+    m_BoxGeometry = std::make_unique<MeshGeometry>();
+    m_BoxGeometry->m_Name = "boxGeo";
+
+    // All of this stuff is pretty generic stuff, it could really just be done on any shape in the same way
+
+    PrioEngine::ThrowIfFailed(D3DCreateBlob(m_Box->GetVertexBufferByteSize(), &m_BoxGeometry->m_VertexBufferCPU));
+    CopyMemory(m_BoxGeometry->m_VertexBufferCPU->GetBufferPointer(), m_Box->GetVertices().data(), m_Box->GetVertexBufferByteSize());
+
+    PrioEngine::ThrowIfFailed(D3DCreateBlob(m_Box->GetIndexBuferByteSize(), &m_BoxGeometry->m_IndexBufferCPU));
+    CopyMemory(m_BoxGeometry->m_IndexBufferCPU->GetBufferPointer(), m_Box->GetIndices().data(), m_Box->GetIndexBuferByteSize());
+
+    m_BoxGeometry->m_VertexBufferGPU = d3dUtil::CreateDefaultBuffer(m_d3dDevice.Get(), m_CommandList.Get(),
+        m_Box->GetVertices().data(), m_Box->GetVertexBufferByteSize(), m_BoxGeometry->m_VertexBufferUploader);
+
+    m_BoxGeometry->m_IndexBufferGPU = d3dUtil::CreateDefaultBuffer(m_d3dDevice.Get(), m_CommandList.Get(),
+        m_Box->GetIndices().data(), m_Box->GetIndexBuferByteSize(), m_BoxGeometry->m_IndexBufferUploader);
+
+    m_BoxGeometry->m_VertexByteStride = sizeof(PrioEngine::Math::Vertex);
+    m_BoxGeometry->m_VertexBufferByteSize = m_Box->GetVertexBufferByteSize();
+    m_BoxGeometry->m_IndexFormat = DXGI_FORMAT_R16_UINT;
+    m_BoxGeometry->m_IndexBufferByteSize = m_Box->GetIndexBuferByteSize();
+
+    SubmeshGeometry submesh;
+    submesh.IndexCount = (UINT)m_Box->GetIndices().size();
+    submesh.StartIndexLocation = 0;
+    submesh.BaseVertexLocation = 0;
+
+    m_BoxGeometry->m_DrawArgs["box"] = submesh;
 }
 
 void CD3D12RenderingEngine::BuildPSO()

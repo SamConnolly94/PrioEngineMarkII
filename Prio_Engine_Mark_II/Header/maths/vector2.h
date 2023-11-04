@@ -2,7 +2,7 @@
 
 namespace PrioEngine
 {
-    namespace Maths
+    namespace Math
     {
         struct Vector2
         {

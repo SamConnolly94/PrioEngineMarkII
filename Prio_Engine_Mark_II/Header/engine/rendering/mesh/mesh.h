@@ -5,12 +5,12 @@
 using Microsoft::WRL::ComPtr;
 using namespace std;
 
-struct SMeshGeometry
+struct MeshGeometry
 {
     std::string m_Name;
 
     Microsoft::WRL::ComPtr<ID3DBlob> m_VertexBufferCPU{ nullptr };
-    Microsoft::WRL::ComPtr<ID3DBlob> m_IndexBufferGPU{ nullptr };
+    Microsoft::WRL::ComPtr<ID3DBlob> m_IndexBufferCPU{ nullptr };
 
     Microsoft::WRL::ComPtr<ID3D12Resource> m_VertexBufferGPU{ nullptr };
     Microsoft::WRL::ComPtr<ID3D12Resource> m_IndexBufferGPU{ nullptr };

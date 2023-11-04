@@ -111,9 +111,6 @@
     <ClCompile Include="Source\engine\rendering\mesh\mesh.cpp">
       <Filter>Source Files\engine\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="uploadbuffer.cpp">
-      <Filter>Source Files\engine\rendering\d3d12</Filter>
-    </ClCompile>
     <ClCompile Include="Source\maths\common\matrixhelper.cpp">
       <Filter>Source Files\maths\common</Filter>
     </ClCompile>
@@ -125,6 +122,15 @@
     </ClCompile>
     <ClCompile Include="Source\maths\vector3.cpp">
       <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\engine\rendering\shapes\box.cpp">
+      <Filter>Source Files\engine\rendering\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\maths\vector4.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\engine\rendering\d3d12\uploadbuffer.cpp">
+      <Filter>Source Files\engine\rendering\d3d12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +196,15 @@
     </ClInclude>
     <ClInclude Include="Header\maths\vector2.h">
       <Filter>Header Files\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\shapes\box.h">
+      <Filter>Header Files\engine\rendering\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\maths\vector4.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\rendering\types\colour.h">
+      <Filter>Header Files\engine\rendering\types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

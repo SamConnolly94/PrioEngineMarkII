@@ -4,7 +4,7 @@
 
 namespace PrioEngine
 {
-    namespace Maths
+    namespace Math
     {
         struct Vector3;
 
@@ -23,6 +23,7 @@ namespace PrioEngine
             static Vector4 CrossProduct(const Vector4& a, const Vector4& b);
             static float Distance(const Vector4& a, const Vector4& b);
             static Vector4 Normalise(const Vector4& a);
+            static Vector4 GetZero() { return Vector4{ 0.0f, 0.0f, 0.0f, 0.0f }; };
 
             float Length() const;
             void Normalise();

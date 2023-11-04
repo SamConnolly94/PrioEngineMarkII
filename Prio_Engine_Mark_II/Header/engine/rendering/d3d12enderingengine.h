@@ -13,6 +13,11 @@ struct MeshGeometry;
 template <typename T>
 class CUploadBuffer;
 
+namespace PrioEngine
+{
+    class CBox;
+}
+
 class CD3D12RenderingEngine : public CRenderingEngineBase
 {
 public:
@@ -26,6 +31,7 @@ protected:
     void FlushCommandQueue();
     virtual void CreateRtvAndDsvDescriptorHeaps();
     void OnResize() override;
+    void Update() override;
     void Draw() override;
 
     ID3D12Resource* CurrentBackBuffer() const;
@@ -87,6 +93,7 @@ private:
     std::unique_ptr<CUploadBuffer<PrioEngine::ObjectConstants>> m_ObjectCB = nullptr;
 
     std::unique_ptr<MeshGeometry> m_BoxGeometry{ nullptr };
+    std::unique_ptr<PrioEngine::CBox> m_Box{ nullptr };
 
     ComPtr<ID3DBlob> m_vsByteCode{ nullptr };
     ComPtr<ID3DBlob> m_psByteCode{ nullptr };

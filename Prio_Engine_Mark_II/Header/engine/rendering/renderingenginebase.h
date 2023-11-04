@@ -12,6 +12,7 @@ public:
 
     EGraphicsAPI GetGraphicsAPI() const;
     virtual void OnResize() = 0;
+    virtual void Update();
     virtual void Draw() = 0;
     std::wstring CalculateFrameStats(const float& totalTime);
 

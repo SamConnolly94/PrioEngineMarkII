@@ -8,6 +8,6 @@ namespace PrioEngine
 {
     struct ObjectConstants
     {
-        DirectX::XMFLOAT4X4 m_WorldViewProj = PrioEngine::Maths::GetIdentity4x4();
+        DirectX::XMFLOAT4X4 m_WorldViewProj = PrioEngine::Math::GetIdentity4x4();
     };
 }

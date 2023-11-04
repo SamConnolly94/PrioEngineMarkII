@@ -7,7 +7,7 @@
 
 namespace PrioEngine
 {
-    namespace Maths
+    namespace Math
     {
         Vector4::Vector4(const Vector3& other) : m_X(other.m_X), m_Y(other.m_Y), m_Z(other.m_Z) {}
 
