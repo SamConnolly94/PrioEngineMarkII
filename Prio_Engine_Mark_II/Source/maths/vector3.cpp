@@ -47,12 +47,12 @@ namespace PrioEngine
             m_Z = noramlised.m_Z;
         }
 
-        Vector3& Vector3::operator=(const Vector3& other)
+        Vector3 Vector3::operator=(const Vector3& other)
         {
             return Vector3(other.m_X, other.m_Y, other.m_Z);
         }
 
-        Vector3& Vector3::operator*=(const float magnitude)
+        Vector3 Vector3::operator*=(const float magnitude)
         {
             return (*this) * magnitude;
         }
@@ -62,22 +62,22 @@ namespace PrioEngine
             return m_X == other.m_X && m_Y == other.m_Y && m_Z == other.m_Z;
         }
 
-        Vector3& Vector3::operator*(const float magnitude)
+        Vector3 Vector3::operator*(const float magnitude)
         {
             return Vector3(m_X * magnitude, m_Y * magnitude, m_Z * magnitude);
         }
 
-        Vector3& Vector3::operator/(const float magnitude)
+        Vector3 Vector3::operator/(const float magnitude)
         {
             return Vector3(m_X / magnitude, m_Y / magnitude, m_Z / magnitude);
         }
 
-        Vector3& Vector3::operator-(const Vector3& other)
+        Vector3 Vector3::operator-(const Vector3& other)
         {
             return Vector3(m_X - other.m_X, m_Y - other.m_Y, m_Z - other.m_Z);
         }
 
-        Vector3& Vector3::operator+(const Vector3& other)
+        Vector3 Vector3::operator+(const Vector3& other)
         {
             return Vector3(m_X + other.m_X, m_Y + other.m_Y, m_Z + other.m_Z);
         }

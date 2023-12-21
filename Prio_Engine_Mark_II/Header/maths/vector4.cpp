@@ -56,12 +56,12 @@ namespace PrioEngine
             m_W = noramlised.m_W;
         }
 
-        Vector4& Vector4::operator=(const Vector4& other)
+        Vector4 Vector4::operator=(const Vector4& other)
         {
             return Vector4(other.m_X, other.m_Y, other.m_Z, other.m_W);
         }
 
-        Vector4& Vector4::operator*=(const float magnitude)
+        Vector4 Vector4::operator*=(const float magnitude)
         {
             return (*this) * magnitude;
         }
@@ -71,22 +71,22 @@ namespace PrioEngine
             return m_X == other.m_X && m_Y == other.m_Y && m_Z == other.m_Z && m_W == other.m_W;
         }
 
-        Vector4& Vector4::operator*(const float magnitude)
+        Vector4 Vector4::operator*(const float magnitude)
         {
             return Vector4(m_X * magnitude, m_Y * magnitude, m_Z * magnitude, m_W * magnitude);
         }
 
-        Vector4& Vector4::operator/(const float magnitude)
+        Vector4 Vector4::operator/(const float magnitude)
         {
             return Vector4(m_X / magnitude, m_Y / magnitude, m_Z / magnitude, m_W / magnitude);
         }
 
-        Vector4& Vector4::operator-(const Vector4& other)
+        Vector4 Vector4::operator-(const Vector4& other)
         {
             return Vector4(m_X - other.m_X, m_Y - other.m_Y, m_Z - other.m_Z, m_W - other.m_W);
         }
 
-        Vector4& Vector4::operator+(const Vector4& other)
+        Vector4 Vector4::operator+(const Vector4& other)
         {
             return Vector4(m_X + other.m_X, m_Y + other.m_Y, m_Z + other.m_Z, m_W + other.m_W);
         }

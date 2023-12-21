@@ -24,13 +24,13 @@ namespace PrioEngine
             void Normalise();
 
             // Operators
-            Vector3& operator= (const Vector3& other);
-            Vector3& operator*= (const float magnitude);
+            Vector3 operator= (const Vector3& other);
+            Vector3 operator*= (const float magnitude);
             bool operator== (const Vector3& other) const;
-            Vector3& operator* (const float magnitude);
-            Vector3& operator/ (const float magnitude);
-            Vector3& operator- (const Vector3& other);
-            Vector3& operator+ (const Vector3& other);
+            Vector3 operator* (const float magnitude);
+            Vector3 operator/ (const float magnitude);
+            Vector3 operator- (const Vector3& other);
+            Vector3 operator+ (const Vector3& other);
             friend std::ostream& operator<<(std::ostream& os, const Vector3& vector);
         };
 

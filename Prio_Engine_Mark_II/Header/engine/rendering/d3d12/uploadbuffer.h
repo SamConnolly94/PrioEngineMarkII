@@ -26,7 +26,7 @@ public:
             IID_PPV_ARGS(&m_UploadBuffer)
         ));
 
-        PrioEngine::ThrowIfFailed(&m_UploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&m_MappedData)));
+        PrioEngine::ThrowIfFailed(m_UploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&m_MappedData)));
         
         // We can't write to the resource for as long as the resource is mapped. 
     }
@@ -48,7 +48,7 @@ public:
 
     void CopyData(int elementIndex, const T& data)
     {
-        memcpy(&mMappedData[elementIndex * mElementByteSize], &data, sizeof(T));
+        memcpy(&m_MappedData[elementIndex * m_ElementByteSize], &data, sizeof(T));
     }
 private:
     Microsoft::WRL::ComPtr<ID3D12Resource> m_UploadBuffer;

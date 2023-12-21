@@ -8,6 +8,8 @@
 #include <engine/rendering/shapes/box.h>
 #include <engine/rendering/mesh/mesh.h>
 #include <maths/types/vertex.h> // TODO: Remove include when removing cube rendering code from this file
+#include <maths/vector4.h>
+#include <maths/common/vectorhelper.h>
 
 #include <memory>
 
@@ -349,7 +351,8 @@ void CD3D12RenderingEngine::BuildDescriptorHeaps()
     cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     cbvHeapDesc.NodeMask = 0;
-    PrioEngine::ThrowIfFailed(m_d3dDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_CbvHeap)));
+    PrioEngine::ThrowIfFailed(m_d3dDevice->CreateDescriptorHeap(&cbvHeapDesc,
+        IID_PPV_ARGS(&m_CbvHeap)));
 }
 
 void CD3D12RenderingEngine::BuildConstantBuffers()
@@ -367,6 +370,35 @@ void CD3D12RenderingEngine::BuildConstantBuffers()
     cbvDesc.SizeInBytes = objCBBufferSize;
 
     m_d3dDevice->CreateConstantBufferView(&cbvDesc, m_CbvHeap->GetCPUDescriptorHandleForHeapStart());
+}
+
+void CD3D12RenderingEngine::UpdateCameraMatrices()
+{
+    using namespace PrioEngine::Math;
+    using namespace DirectX;
+
+    // TODO:
+    // Move below
+    // DirectX specific stuff going on here which indicates it belongs in the d3d12renderingengine.cpp file instead
+
+    float x = m_Radius * sinf(m_Phi) * cosf(m_Theta);
+    float z = m_Radius * sinf(m_Phi) * sinf(m_Theta);
+    float y = m_Radius * cosf(m_Phi);
+
+    Vector4 pos = { x, y, z, 0.0f };
+    Vector4 target = Vector4::GetZero();
+    Vector4 up = { 0.0f, 1.0f, 0.0f, 0.0f };
+    DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(ToXMVECTOR(pos), ToXMVECTOR(target), ToXMVECTOR(up));
+    XMStoreFloat4x4(&m_View, view);
+
+    XMMATRIX world = XMLoadFloat4x4(&m_World);
+    XMMATRIX proj = XMLoadFloat4x4(&m_Proj);
+    XMMATRIX worldViewProj = world * view * proj;
+
+    // Update the constant buffer with the latest worldViewProj matrix.
+    PrioEngine::ObjectConstants objConstants;
+    XMStoreFloat4x4(&objConstants.m_WorldViewProj, XMMatrixTranspose(worldViewProj));
+    m_ObjectCB->CopyData(0, objConstants);
 }
 
 void CD3D12RenderingEngine::BuildRootSignature()
@@ -414,8 +446,7 @@ void CD3D12RenderingEngine::BuildShadersAndInputLayout()
     {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
         {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
-    }
-
+    };
 }
 
 void CD3D12RenderingEngine::BuildBoxGeometry()

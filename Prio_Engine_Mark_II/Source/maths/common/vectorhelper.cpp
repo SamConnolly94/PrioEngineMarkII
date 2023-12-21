@@ -10,12 +10,12 @@ namespace PrioEngine
     {
         DirectX::XMVECTOR ToXMVECTOR(const PrioEngine::Math::Vector3& vector)
         {
-            return DirectX::XMVECTOR(vector.m_X, vector.m_Y, vector.m_Z);
+            return DirectX::XMVECTOR({ vector.m_X, vector.m_Y, vector.m_Z });
         }
 
         DirectX::XMVECTOR ToXMVECTOR(const PrioEngine::Math::Vector4& vector)
         {
-            return DirectX::XMVECTOR(vector.m_X, vector.m_Y, vector.m_Z, vector.m_W);
+            return DirectX::XMVECTOR({ vector.m_X, vector.m_Y, vector.m_Z, vector.m_W });
         }
     }
 }

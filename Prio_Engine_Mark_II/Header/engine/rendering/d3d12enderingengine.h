@@ -3,20 +3,14 @@
 #include <engine/rendering/helper/d3d12util.h>
 #include <engine/rendering/renderingenginebase.h>
 #include <engine/common/objectconstants.h>
+#include <maths/common/matrixhelper.h>
+#include <engine/rendering/shapes/box.h>
+#include <engine/rendering/mesh/mesh.h>
+#include <engine/rendering/d3d12/uploadbuffer.h>
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
-
-struct MeshGeometry;
-
-template <typename T>
-class CUploadBuffer;
-
-namespace PrioEngine
-{
-    class CBox;
-}
 
 class CD3D12RenderingEngine : public CRenderingEngineBase
 {
@@ -31,7 +25,7 @@ protected:
     void FlushCommandQueue();
     virtual void CreateRtvAndDsvDescriptorHeaps();
     void OnResize() override;
-    void Update() override;
+    void UpdateCameraMatrices() final;
     void Draw() override;
 
     ID3D12Resource* CurrentBackBuffer() const;
@@ -87,19 +81,24 @@ private:
     // Further required vars for rendering shapes
     // I'd like to split this out somewhere outside of the rendering class at some point
     // Some of it still belongs in here, but other parts definitely do not.
-    ComPtr<ID3D12RootSignature> m_RootSignature{ nullptr };
-    ComPtr<ID3D12DescriptorHeap> m_CbvHeap{ nullptr };
+    Microsoft::WRL::ComPtr<ID3D12RootSignature> m_RootSignature{ nullptr };
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_CbvHeap{ nullptr };
 
     std::unique_ptr<CUploadBuffer<PrioEngine::ObjectConstants>> m_ObjectCB = nullptr;
 
     std::unique_ptr<MeshGeometry> m_BoxGeometry{ nullptr };
     std::unique_ptr<PrioEngine::CBox> m_Box{ nullptr };
 
-    ComPtr<ID3DBlob> m_vsByteCode{ nullptr };
-    ComPtr<ID3DBlob> m_psByteCode{ nullptr };
+    Microsoft::WRL::ComPtr<ID3DBlob> m_vsByteCode{ nullptr };
+    Microsoft::WRL::ComPtr<ID3DBlob> m_psByteCode{ nullptr };
 
     std::vector<D3D12_INPUT_ELEMENT_DESC> m_InputLayout;
 
-    ComPtr<ID3D12PipelineState> m_PSO{ nullptr };
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> m_PSO{ nullptr };
+
+    DirectX::XMFLOAT4X4 m_World = PrioEngine::Math::GetIdentity4x4();
+    DirectX::XMFLOAT4X4 m_View = PrioEngine::Math::GetIdentity4x4();
+    DirectX::XMFLOAT4X4 m_Proj = PrioEngine::Math::GetIdentity4x4();
+
 };
 

@@ -5,22 +5,22 @@ namespace PrioEngine
 {
     namespace Math
     {
-        Vector2& Vector2::operator=(const Vector2& other)
+        Vector2 Vector2::operator=(const Vector2& other)
         {
             return Vector2(other.m_X, other.m_Y);
         }
 
-        Vector2& Vector2::operator*(const float magnitude)
+        Vector2 Vector2::operator*(const float magnitude)
         {
             return Vector2(m_X * magnitude, m_Y * magnitude);
         }
 
-        Vector2& Vector2::operator-(const Vector2& other)
+        Vector2 Vector2::operator-(const Vector2& other)
         {
             return Vector2(m_X - other.m_X, m_Y - other.m_Y);
         }
 
-        Vector2& Vector2::operator+(const Vector2& other)
+        Vector2 Vector2::operator+(const Vector2& other)
         {
             return Vector2(m_X + other.m_X, m_Y + other.m_Y);
         }

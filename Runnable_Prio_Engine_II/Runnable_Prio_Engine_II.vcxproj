@@ -141,7 +141,9 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>copy /Y "$(SolutionDir)Prio_Engine_Mark_II\Build\$(Platform)\$(Configuration)\dprioengine2.dll" "$(SolutionDir)$(ProjectName)\Build\$(Platform)\$(Configuration)\"</Command>
+      <Command>xcopy /Y "$(SolutionDir)Prio_Engine_Mark_II\Build\$(Platform)\$(Configuration)\dprioengine2.dll" "$(SolutionDir)$(ProjectName)\Build\$(Platform)\$(Configuration)\"
+xcopy "$(SolutionDir)Prio_Engine_Mark_II\Shaders\*.*" "$(SolutionDir)$(ProjectName)\Build\$(Platform)\$(Configuration)\Shaders" /Y /I /E
+xcopy "$(SolutionDir)Prio_Engine_Mark_II\Shaders\*.*" "$(SolutionDir)$(ProjectName)\Shaders" /Y /I /E</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>Copying the Prio Engine DLL to the working directory.</Message>
@@ -165,7 +167,9 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>copy /Y "$(SolutionDir)Prio_Engine_Mark_II\Build\$(Platform)\$(Configuration)\prioengine2.dll" "$(SolutionDir)$(ProjectName)\Build\$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /Y "$(SolutionDir)Prio_Engine_Mark_II\Build\$(Platform)\$(Configuration)\prioengine2.dll" "$(SolutionDir)$(ProjectName)\Build\$(Platform)\$(Configuration)\"
+xcopy "$(SolutionDir)Prio_Engine_Mark_II\Shaders\*.*" "$(SolutionDir)$(ProjectName)\Build\$(Platform)\$(Configuration)\Shaders" /Y /I /E
+xcopy "$(SolutionDir)Prio_Engine_Mark_II\Shaders\*.*" "$(SolutionDir)$(ProjectName)\Shaders" /Y /I /E</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

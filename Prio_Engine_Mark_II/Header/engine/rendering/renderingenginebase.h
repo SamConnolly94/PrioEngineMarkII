@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <DirectXMath.h>
 
 enum class EGraphicsAPI;
 
@@ -19,7 +20,17 @@ public:
     bool Get4xMsaaState() const { return m_4xMsaaState; };
     void Set4xMsaaState(const bool value) { m_4xMsaaState = value; };
 protected:
+    virtual void UpdateCameraMatrices() = 0;
+protected:
     bool m_4xMsaaState{ false };
+    // TODO:
+    // These are probably gameplay specific things that should be passed in.
+    // THey are here for the box rendering tutorial.
+    // I could remove them afterwards
+    static constexpr float m_Radius{ 5.0f };
+    static constexpr float m_Phi{ DirectX::XM_PIDIV4 };
+    static constexpr float m_Theta = { 1.5f * DirectX::XM_PI };
+    // end TODO
 public:
     virtual bool Initialise() = 0;
 protected:

@@ -120,6 +120,7 @@
     <ClCompile Include="Source\engine\rendering\shapes\box.cpp" />
     <ClCompile Include="Source\engine\timer.cpp" />
     <ClCompile Include="Source\maths\common\matrixhelper.cpp" />
+    <ClCompile Include="Source\maths\common\vectorhelper.cpp" />
     <ClCompile Include="Source\maths\vector2.cpp" />
     <ClCompile Include="Source\maths\vector3.cpp" />
     <ClCompile Include="Source\prioengine.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="Header\engine\rendering\types\graphicsapi.h" />
     <ClInclude Include="Header\engine\timer.h" />
     <ClInclude Include="Header\maths\common\matrixhelper.h" />
+    <ClInclude Include="Header\maths\common\vectorhelper.h" />
     <ClInclude Include="Header\maths\types\vertex.h" />
     <ClInclude Include="Header\maths\vector2.h" />
     <ClInclude Include="Header\maths\vector3.h" />
