@@ -33,11 +33,9 @@ public:
     HWND __declspec(dllexport) GetWindowHandle() const { return mh_MainWnd; };
     bool __declspec(dllexport) Update();
 
-    // Convenience overrides for handling mouse input.
-    virtual void OnMouseDown(WPARAM btnState, int x, int y) { }
-    virtual void OnMouseUp(WPARAM btnState, int x, int y) { }
-    virtual void OnMouseMove(WPARAM btnState, int x, int y) { }
-
+    virtual void CPrioEngine::OnMouseDown(WPARAM btnState, int x, int y);
+    virtual void CPrioEngine::OnMouseUp(WPARAM btnState, int x, int y);
+    virtual void CPrioEngine::OnMouseMove(WPARAM btnState, int x, int y);
 protected:
     CPrioEngine(EGraphicsAPI graphicsApi = EGraphicsAPI::DX12, unsigned int width = 800, unsigned int height = 600, const std::string windowTitle = "Prio Engine II");
     void OnResize();
@@ -57,5 +55,10 @@ private:
     bool m_Resizing{ false };
     std::wstring m_WindowTitle{};
     std::unique_ptr<CTimer> m_Timer;
+    POINT m_LastMousePosition{ 0, 0 };
+
+    float mTheta = 1.5f * XM_PI;
+    float mPhi = XM_PIDIV4;
+    float mRadius = 5.0f;
 };
 

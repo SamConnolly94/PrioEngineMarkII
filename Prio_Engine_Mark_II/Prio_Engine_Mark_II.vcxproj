@@ -108,6 +108,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="maths.cpp" />
     <ClCompile Include="Header\maths\vector4.cpp" />
     <ClCompile Include="Source\engine\common\stringconversion.cpp" />
     <ClCompile Include="Source\engine\rendering\d3d12renderingengine.cpp" />
@@ -123,10 +124,10 @@
     <ClCompile Include="Source\maths\common\vectorhelper.cpp" />
     <ClCompile Include="Source\maths\vector2.cpp" />
     <ClCompile Include="Source\maths\vector3.cpp" />
-    <ClCompile Include="Source\prioengine.cpp" />
     <ClCompile Include="Source\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="maths.h" />
     <ClInclude Include="Header\engine\common\objectconstants.h" />
     <ClInclude Include="Header\engine\common\stringconversion.h" />
     <ClInclude Include="Header\engine\rendering\d3d12enderingengine.h" />

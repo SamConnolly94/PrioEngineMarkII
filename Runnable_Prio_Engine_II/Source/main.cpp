@@ -5,6 +5,7 @@
 #endif
 
 #include <prioengine.h>
+#include <shapes/box.h>
 
 using namespace std;
 
@@ -13,8 +14,13 @@ int main()
     CPrioEngine::CreateInstance(EGraphicsAPI::DX12);
     CPrioEngine& engine = CPrioEngine::GetInstance();
 
+    //PrioEngine::CBox* box = new PrioEngine::CBox();
     while (engine.Update())
     {
+        //box.Draw();
         // Game loop here
     }
+
+
+    //delete(box);
 }

@@ -43,9 +43,6 @@
     <Filter Include="Header Files\engine\rendering\types">
       <UniqueIdentifier>{a388e2ab-ffde-4c37-bdbf-2c09344c727f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\engine\common">
-      <UniqueIdentifier>{9c3f08bb-a539-4ea2-8347-77d024a6d8b4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\engine\common">
       <UniqueIdentifier>{3eb9451a-99ea-41f8-bdb2-459901233fdd}</UniqueIdentifier>
     </Filter>
@@ -82,12 +79,12 @@
     <Filter Include="Source Files\engine\rendering\shapes">
       <UniqueIdentifier>{31ba9735-372b-4595-a434-273497649f4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine\common">
+      <UniqueIdentifier>{9c3f08bb-a539-4ea2-8347-77d024a6d8b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\prioengine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\engine\rendering\renderingenginebase.cpp">
@@ -133,6 +130,9 @@
       <Filter>Source Files\engine\rendering\d3d12</Filter>
     </ClCompile>
     <ClCompile Include="Source\maths\common\vectorhelper.cpp">
+      <Filter>Source Files\maths\common</Filter>
+    </ClCompile>
+    <ClCompile Include="maths.cpp">
       <Filter>Source Files\maths\common</Filter>
     </ClCompile>
   </ItemGroup>
@@ -210,6 +210,9 @@
       <Filter>Header Files\engine\rendering\types</Filter>
     </ClInclude>
     <ClInclude Include="Header\maths\common\vectorhelper.h">
+      <Filter>Header Files\maths\common</Filter>
+    </ClInclude>
+    <ClInclude Include="maths.h">
       <Filter>Header Files\maths\common</Filter>
     </ClInclude>
   </ItemGroup>
