@@ -6,7 +6,7 @@ template <typename T>
 class CUploadBuffer
 {
 public:
-    CUploadBuffer(ID3D12Device* device, UINT elementCount, bool isConstantBuffer) : m_IsConstantBuffer(isConstantBuffer)
+    CUploadBuffer::CUploadBuffer(ID3D12Device* device, UINT elementCount, bool isConstantBuffer) : m_IsConstantBuffer(isConstantBuffer)
     {
         m_ElementByteSize = sizeof(T);
 

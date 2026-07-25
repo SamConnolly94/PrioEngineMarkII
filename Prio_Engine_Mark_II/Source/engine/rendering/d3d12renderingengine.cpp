@@ -8,7 +8,7 @@
 #include <engine/rendering/shapes/box.h>
 #include <engine/rendering/mesh/mesh.h>
 #include <maths/types/vertex.h> // TODO: Remove include when removing cube rendering code from this file
-#include <maths/vector4.h>
+#include <maths/common/vector4.h>
 #include <maths/common/vectorhelper.h>
 
 #include <memory>
@@ -26,6 +26,11 @@ Microsoft::WRL::ComPtr<ID3D12Device> CD3D12RenderingEngine::GetDevice() const
     return m_d3dDevice;
 }
 
+bool CD3D12RenderingEngine::GraphicsApiInitialised()
+{
+    return m_d3dDevice;
+}
+
 bool CD3D12RenderingEngine::Initialise()
 {
 #if defined(DEBUG) || defined(_DEBUG)
@@ -37,83 +42,83 @@ bool CD3D12RenderingEngine::Initialise()
     }
 #endif
 
-// Initialise the factory used for creating devices
-PrioEngine::ThrowIfFailed(CreateDXGIFactory(IID_PPV_ARGS(&m_dxgiFactory)));
+    // Initialise the factory used for creating devices
+    PrioEngine::ThrowIfFailed(CreateDXGIFactory(IID_PPV_ARGS(&m_dxgiFactory)));
 
-// Initialise the device
-HRESULT hardwareResult = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_d3dDevice));
+    // Initialise the device
+    HRESULT hardwareResult = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_d3dDevice));
 
-// Fallback to Windows Advanced Rasterization Platform (WARP) device
-if (FAILED(hardwareResult))
-{
-    ComPtr<IDXGIAdapter> pWarpAdapter;
-    PrioEngine::ThrowIfFailed(m_dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pWarpAdapter)));
+    // Fallback to Windows Advanced Rasterization Platform (WARP) device
+    if (FAILED(hardwareResult))
+    {
+        ComPtr<IDXGIAdapter> pWarpAdapter;
+        PrioEngine::ThrowIfFailed(m_dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pWarpAdapter)));
 
-    PrioEngine::ThrowIfFailed(D3D12CreateDevice(
-        pWarpAdapter.Get(),
-        D3D_FEATURE_LEVEL_11_0,
-        IID_PPV_ARGS(&m_d3dDevice)));
-}
+        PrioEngine::ThrowIfFailed(D3D12CreateDevice(
+            pWarpAdapter.Get(),
+            D3D_FEATURE_LEVEL_11_0,
+            IID_PPV_ARGS(&m_d3dDevice)));
+    }
 
-// TODO:
-// What's a fence again in this context? Can't really remember.
-PrioEngine::ThrowIfFailed(m_d3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
-    IID_PPV_ARGS(&m_Fence)));
+    // TODO:
+    // What's a fence again in this context? Can't really remember.
+    PrioEngine::ThrowIfFailed(m_d3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
+        IID_PPV_ARGS(&m_Fence)));
 
-m_RtvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-m_DsvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-m_CbvSrvUavDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    m_RtvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    m_DsvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+    m_CbvSrvUavDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-// Checking for 4x MSAA support for back buffer.
-// Everything above DX11 should have this.
+    // Checking for 4x MSAA support for back buffer.
+    // Everything above DX11 should have this.
 
-D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
-msQualityLevels.Format = m_BackBufferFormat;
-msQualityLevels.SampleCount = 4;
-msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
-msQualityLevels.NumQualityLevels = 0;
-PrioEngine::ThrowIfFailed(m_d3dDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels, sizeof(msQualityLevels)));
+    D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
+    msQualityLevels.Format = m_BackBufferFormat;
+    msQualityLevels.SampleCount = 4;
+    msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
+    msQualityLevels.NumQualityLevels = 0;
+    PrioEngine::ThrowIfFailed(m_d3dDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels, sizeof(msQualityLevels)));
 
-m_4xMsaaQuality = msQualityLevels.NumQualityLevels;
-if (m_4xMsaaQuality <= 0)
-{
-    throw UnexpectedMsaaQualityLevels();
-}
+    m_4xMsaaQuality = msQualityLevels.NumQualityLevels;
+    if (m_4xMsaaQuality <= 0)
+    {
+        throw UnexpectedMsaaQualityLevels();
+    }
 
-#ifdef _DEBUG
-LogAdapters();
-#endif
+    #ifdef _DEBUG
+    LogAdapters();
+    #endif
 
-CreateCommandObjects();
-CreateSwapChain();
-CreateRtvAndDsvDescriptorHeaps();
+    CreateCommandObjects();
+    CreateSwapChain();
+    CreateRtvAndDsvDescriptorHeaps();
 
-// Do the initial resize code.
-OnResize();
+    // Do the initial resize code.
+    OnResize();
 
 
-// TODO:
-// Do these all really belong here?
-// I think we can break these up better
-    // Reset the command list to prep for initialization commands.
-PrioEngine::ThrowIfFailed(m_CommandList->Reset(m_DirectCmdListAlloc.Get(), nullptr));
+    // TODO:
+    // Do these all really belong here?
+    // I think we can break these up better
+        // Reset the command list to prep for initialization commands.
+    PrioEngine::ThrowIfFailed(m_CommandList->Reset(m_DirectCmdListAlloc.Get(), nullptr));
 
-BuildDescriptorHeaps();
-BuildConstantBuffers();
-BuildRootSignature();
-BuildShadersAndInputLayout();
-BuildBoxGeometry();
-BuildPSO();
+    BuildDescriptorHeaps();
+    BuildConstantBuffers();
+    BuildRootSignature();
+    BuildShadersAndInputLayout();
+    BuildBoxGeometry();
+    BuildPSO();
 
-// Execute the initialization commands.
-PrioEngine::ThrowIfFailed(m_CommandList->Close());
-ID3D12CommandList* cmdsLists[] = { m_CommandList.Get() };
-m_CommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+    // Execute the initialization commands.
+    PrioEngine::ThrowIfFailed(m_CommandList->Close());
+    ID3D12CommandList* cmdsLists[] = { m_CommandList.Get() };
+    m_CommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-// Wait until initialization is complete.
-FlushCommandQueue();
+    // Wait until initialization is complete.
+    FlushCommandQueue();
 
-return true;
+    return true;
 }
 
 void CD3D12RenderingEngine::CreateCommandObjects()
@@ -306,9 +311,9 @@ void CD3D12RenderingEngine::Draw()
 
     PrioEngine::ThrowIfFailed(m_CommandList->Reset(m_DirectCmdListAlloc.Get(), nullptr));
 
-    m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), 
+    m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
         D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-    
+
     m_CommandList->RSSetViewports(1, &m_ScreenViewport);
     m_CommandList->RSSetScissorRects(1, &m_ScissorRect);
 
@@ -317,7 +322,7 @@ void CD3D12RenderingEngine::Draw()
 
     // Specify the buffer we want to render to
     m_CommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
-    ID3D12DescriptorHeap* descriptorHeaps[] = {m_CbvHeap.Get()};
+    ID3D12DescriptorHeap* descriptorHeaps[] = { m_CbvHeap.Get() };
     m_CommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
     m_CommandList->SetGraphicsRootSignature(m_RootSignature.Get());
@@ -332,7 +337,7 @@ void CD3D12RenderingEngine::Draw()
     m_CommandList->DrawIndexedInstanced(m_BoxGeometry->m_DrawArgs["box"].IndexCount, 1, 0, 0, 0);
 
     // Indicate a state transition on the resource usage.
-    m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), 
+    m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
         D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
     PrioEngine::ThrowIfFailed(m_CommandList->Close());

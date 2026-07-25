@@ -5,9 +5,8 @@
 #include <Windows.h>
 #include <wrl.h>
 #include <string>
+#include <DirectXMath.h>
 
-// TODO:
-// Don't believe this is needed.
 using Microsoft::WRL::ComPtr;
 using namespace std;
 
@@ -32,33 +31,33 @@ public:
     int __declspec(dllexport) GetClientHeight() const { return m_ClientHeight; };
     HWND __declspec(dllexport) GetWindowHandle() const { return mh_MainWnd; };
     bool __declspec(dllexport) Update();
-
-    virtual void CPrioEngine::OnMouseDown(WPARAM btnState, int x, int y);
-    virtual void CPrioEngine::OnMouseUp(WPARAM btnState, int x, int y);
-    virtual void CPrioEngine::OnMouseMove(WPARAM btnState, int x, int y);
 protected:
     CPrioEngine(EGraphicsAPI graphicsApi = EGraphicsAPI::DX12, unsigned int width = 800, unsigned int height = 600, const std::string windowTitle = "Prio Engine II");
     void OnResize();
+
+    void OnMouseDown(WPARAM btnState, int x, int y);
+    void OnMouseUp(WPARAM btnState, int x, int y);
+    void OnMouseMove(WPARAM btnState, int x, int y);
 private:
     bool InitMainWindow();
 protected:
     bool m_Paused{ false };
+    bool m_Minimised{ false };
+    bool m_Maximised{ false };
+    bool m_Resizing{ false };
+    int m_ClientWidth{ 800 };
+    int m_ClientHeight{ 600 };
+    POINT m_LastMousePosition{ 0, 0 };
 private:
     inline static CPrioEngine* m_Instance;
     std::unique_ptr<CRenderingEngineBase> m_RenderingEngine{};
     HWND mh_MainWnd{};
     HINSTANCE mh_Instance{};
-    int m_ClientWidth{ 800 };
-    int m_ClientHeight{ 600 };
-    bool m_Minimised{ false };
-    bool m_Maximised{ false };
-    bool m_Resizing{ false };
     std::wstring m_WindowTitle{};
     std::unique_ptr<CTimer> m_Timer;
-    POINT m_LastMousePosition{ 0, 0 };
 
-    float mTheta = 1.5f * XM_PI;
-    float mPhi = XM_PIDIV4;
+    float m_Theta = 1.5f * DirectX::XM_PI;
+    float m_Phi = DirectX::XM_PIDIV4;
     float mRadius = 5.0f;
 };
 

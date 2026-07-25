@@ -3,7 +3,7 @@
 
 #include <engine/rendering/types/graphicsapi.h>
 #include <os/globals.h>
-#include <maths/vector4.h>
+#include <maths/common/vector4.h>
 #include <maths/common/vectorhelper.h>
 #include <DirectXMath.h>
 #include <DirectXMathMatrix.inl>
@@ -29,6 +29,7 @@ EGraphicsAPI CRenderingEngineBase::GetGraphicsAPI() const
 void CRenderingEngineBase::Update()
 {
 	UpdateCameraMatrices();
+	Draw();
 }
 
 std::wstring CRenderingEngineBase::CalculateFrameStats(const float& totalTime)

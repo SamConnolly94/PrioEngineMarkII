@@ -19,12 +19,13 @@ public:
 
     bool Initialise() override;
     Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() const;
+    virtual bool GraphicsApiInitialised() override;
 protected:
     void CreateCommandObjects();
     void CreateSwapChain();
     void FlushCommandQueue();
     virtual void CreateRtvAndDsvDescriptorHeaps();
-    void OnResize() override;
+    virtual void OnResize() override;
     void UpdateCameraMatrices() final;
     void Draw() override;
 

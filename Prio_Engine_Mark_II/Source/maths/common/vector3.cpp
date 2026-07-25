@@ -1,5 +1,5 @@
 #include <pch.h>
-#include <maths/vector3.h>
+#include <maths/common/vector3.h>
 
 #include <math.h>
 

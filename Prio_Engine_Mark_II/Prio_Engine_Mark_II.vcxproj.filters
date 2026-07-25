@@ -114,17 +114,8 @@
     <ClCompile Include="Source\engine\rendering\d3d12\common\shaderutil.cpp">
       <Filter>Source Files\engine\rendering\d3d12</Filter>
     </ClCompile>
-    <ClCompile Include="Source\maths\vector2.cpp">
-      <Filter>Source Files\maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\maths\vector3.cpp">
-      <Filter>Source Files\maths</Filter>
-    </ClCompile>
     <ClCompile Include="Source\engine\rendering\shapes\box.cpp">
       <Filter>Source Files\engine\rendering\shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Header\maths\vector4.cpp">
-      <Filter>Source Files\maths</Filter>
     </ClCompile>
     <ClCompile Include="Source\engine\rendering\d3d12\uploadbuffer.cpp">
       <Filter>Source Files\engine\rendering\d3d12</Filter>
@@ -132,8 +123,17 @@
     <ClCompile Include="Source\maths\common\vectorhelper.cpp">
       <Filter>Source Files\maths\common</Filter>
     </ClCompile>
-    <ClCompile Include="maths.cpp">
+    <ClCompile Include="Source\maths\common\vector2.cpp">
       <Filter>Source Files\maths\common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\maths\common\vector3.cpp">
+      <Filter>Source Files\maths\common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\maths\common\vector4.cpp">
+      <Filter>Source Files\maths\common</Filter>
+    </ClCompile>
+    <ClCompile Include="prioengine.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,17 +194,8 @@
     <ClInclude Include="Header\engine\rendering\d3d12\common\shaderutil.h">
       <Filter>Header Files\engine\rendering\d3d12</Filter>
     </ClInclude>
-    <ClInclude Include="Header\maths\vector3.h">
-      <Filter>Header Files\maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\maths\vector2.h">
-      <Filter>Header Files\maths</Filter>
-    </ClInclude>
     <ClInclude Include="Header\engine\rendering\shapes\box.h">
       <Filter>Header Files\engine\rendering\shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\maths\vector4.h">
-      <Filter>Header Files\maths</Filter>
     </ClInclude>
     <ClInclude Include="Header\engine\rendering\types\colour.h">
       <Filter>Header Files\engine\rendering\types</Filter>
@@ -212,7 +203,13 @@
     <ClInclude Include="Header\maths\common\vectorhelper.h">
       <Filter>Header Files\maths\common</Filter>
     </ClInclude>
-    <ClInclude Include="maths.h">
+    <ClInclude Include="Header\maths\common\vector2.h">
+      <Filter>Header Files\maths\common</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\maths\common\vector3.h">
+      <Filter>Header Files\maths\common</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\maths\common\vector4.h">
       <Filter>Header Files\maths\common</Filter>
     </ClInclude>
   </ItemGroup>

@@ -33,6 +33,7 @@ protected:
     // end TODO
 public:
     virtual bool Initialise() = 0;
+    virtual bool GraphicsApiInitialised() = 0;
 protected:
     EGraphicsAPI m_GraphicsApi;
 private:

@@ -1,5 +1,5 @@
 #include <pch.h>
-#include <maths/vector2.h>
+#include <maths/common/vector2.h>
 
 namespace PrioEngine
 {
