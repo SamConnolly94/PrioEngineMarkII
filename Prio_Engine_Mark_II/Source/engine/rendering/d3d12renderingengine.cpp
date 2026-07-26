@@ -149,28 +149,38 @@ void CD3D12RenderingEngine::CreateCommandObjects()
 
 void CD3D12RenderingEngine::CreateSwapChain()
 {
+    using namespace PrioEngine;
+
+    CPrioEngine& engine = CPrioEngine::GetInstance();
+    auto clientWidth = engine.GetClientWidth();
+    auto clientHeight = engine.GetClientHeight();
+    auto mainWnd = engine.GetWindowHandle();
+
+    // Release the previous swapchain we will be recreating.
     m_SwapChain.Reset();
 
     DXGI_SWAP_CHAIN_DESC sd;
-    sd.BufferDesc.Width = CPrioEngine::GetInstance().GetClientWidth();
-    sd.BufferDesc.Height = CPrioEngine::GetInstance().GetClientHeight();
+    sd.BufferDesc.Width = clientWidth;
+    sd.BufferDesc.Height = clientHeight;
     sd.BufferDesc.RefreshRate.Numerator = 60;
     sd.BufferDesc.RefreshRate.Denominator = 1;
     sd.BufferDesc.Format = m_BackBufferFormat;
     sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
     sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-
     sd.SampleDesc.Count = m_4xMsaaState ? 4 : 1;
     sd.SampleDesc.Quality = m_4xMsaaState ? (m_4xMsaaQuality - 1) : 0;
-
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     sd.BufferCount = SwapChainBufferCount;
-    sd.OutputWindow = CPrioEngine::GetInstance().GetWindowHandle();
+    sd.OutputWindow = mainWnd;
     sd.Windowed = true;
     sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-    PrioEngine::ThrowIfFailed(m_dxgiFactory->CreateSwapChain(m_CommandQueue.Get(), &sd, m_SwapChain.GetAddressOf()));
+    // Note: Swap chain uses queue to perform flush.
+    ThrowIfFailed(m_dxgiFactory->CreateSwapChain(
+        m_CommandQueue.Get(),
+        &sd,
+        m_SwapChain.GetAddressOf()));
 }
 
 void CD3D12RenderingEngine::FlushCommandQueue()
@@ -181,7 +191,7 @@ void CD3D12RenderingEngine::FlushCommandQueue()
 
     if (m_Fence->GetCompletedValue() < m_CurrentFence)
     {
-        HANDLE eventHandle = CreateEventEx(nullptr, L"", false, EVENT_ALL_ACCESS);
+        HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
 
         PrioEngine::ThrowIfFailed(m_Fence->SetEventOnCompletion(m_CurrentFence, eventHandle));
 
@@ -252,11 +262,16 @@ void CD3D12RenderingEngine::OnResize()
     }
 
     // Create the depth/stencil buffer and view.
+
+    CPrioEngine& engine = CPrioEngine::GetInstance();
+    auto clientWidth = engine.GetClientWidth();
+    auto clientHeight = engine.GetClientHeight();
+
     D3D12_RESOURCE_DESC depthStencilDesc;
     depthStencilDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
     depthStencilDesc.Alignment = 0;
-    depthStencilDesc.Width = CPrioEngine::GetInstance().GetClientWidth();
-    depthStencilDesc.Height = CPrioEngine::GetInstance().GetClientHeight();
+    depthStencilDesc.Width = clientWidth;
+    depthStencilDesc.Height = clientHeight;
     depthStencilDesc.DepthOrArraySize = 1;
     depthStencilDesc.MipLevels = 1;
 
@@ -318,7 +333,9 @@ void CD3D12RenderingEngine::Draw()
 {
     PrioEngine::ThrowIfFailed(m_DirectCmdListAlloc->Reset());
 
-    PrioEngine::ThrowIfFailed(m_CommandList->Reset(m_DirectCmdListAlloc.Get(), nullptr));
+    // A command list can be reset after it has been added to the command queue via ExecuteCommandList.
+    // Reusing the command list reuses memory.
+    PrioEngine::ThrowIfFailed(m_CommandList->Reset(m_DirectCmdListAlloc.Get(), m_PSO.Get()));
 
     m_CommandList->RSSetViewports(1, &m_ScreenViewport);
     m_CommandList->RSSetScissorRects(1, &m_ScissorRect);
@@ -339,7 +356,7 @@ void CD3D12RenderingEngine::Draw()
 
     m_CommandList->IASetVertexBuffers(0, 1, &m_BoxGeometry->VertexBufferView());
     m_CommandList->IASetIndexBuffer(&m_BoxGeometry->IndexBufferView());
-    m_CommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    m_CommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     m_CommandList->SetGraphicsRootDescriptorTable(0, m_CbvHeap->GetGPUDescriptorHandleForHeapStart());
 
@@ -357,8 +374,7 @@ void CD3D12RenderingEngine::Draw()
     m_CommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
     // Swap front and back buffers
-
-    PrioEngine::ThrowIfFailed(m_SwapChain->Present(0, 0));
+    PrioEngine::ThrowIfFailed(m_SwapChain->Present(0, 0), m_d3dDevice);
     m_CurrentBackBuffer = (m_CurrentBackBuffer + 1) % SwapChainBufferCount;
 
     FlushCommandQueue();
@@ -371,7 +387,10 @@ ID3D12Resource* CD3D12RenderingEngine::CurrentBackBuffer() const
 
 D3D12_CPU_DESCRIPTOR_HANDLE CD3D12RenderingEngine::CurrentBackBufferView() const
 {
-    return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_RtvHeap->GetCPUDescriptorHandleForHeapStart(), m_CurrentBackBuffer, m_RtvDescriptorSize);
+    return CD3DX12_CPU_DESCRIPTOR_HANDLE(
+        m_RtvHeap->GetCPUDescriptorHandleForHeapStart(), 
+        m_CurrentBackBuffer, 
+        m_RtvDescriptorSize);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE CD3D12RenderingEngine::DepthStencilView() const
@@ -417,11 +436,11 @@ void CD3D12RenderingEngine::UpdateCameraMatrices()
     float z = m_Radius * sinf(m_Phi) * sinf(m_Theta);
     float y = m_Radius * cosf(m_Phi);
 
-    Vector4 pos = { x, y, z, 0.0f };
-    Vector4 target = Vector4::GetZero();
-    Vector4 up = { 0.0f, 1.0f, 0.0f, 0.0f };
+    XMVECTOR pos = { x, y, z, 1.0f };
+    XMVECTOR target = XMVectorZero();
+    XMVECTOR up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
-    DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(ToXMVECTOR(pos), ToXMVECTOR(target), ToXMVECTOR(up));
+    DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(pos, target, up);
     XMStoreFloat4x4(&m_View, view);
 
     XMMATRIX world = XMLoadFloat4x4(&m_World);
@@ -542,7 +561,7 @@ void CD3D12RenderingEngine::BuildPSO()
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
     psoDesc.NumRenderTargets = 1;
     psoDesc.RTVFormats[0] = m_BackBufferFormat;
-    psoDesc.SampleDesc.Count = m_4xMsaaQuality ? 4 : 1;
+    psoDesc.SampleDesc.Count = m_4xMsaaState ? 4 : 1;
     psoDesc.SampleDesc.Quality = m_4xMsaaState ? (m_4xMsaaQuality - 1) : 0;
     psoDesc.DSVFormat = m_DepthStencilFormat;
     PrioEngine::ThrowIfFailed(m_d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_PSO)));
