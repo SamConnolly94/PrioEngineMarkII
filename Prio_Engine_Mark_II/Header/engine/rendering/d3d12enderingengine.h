@@ -28,6 +28,7 @@ protected:
     virtual void OnResize() override;
     void UpdateCameraMatrices() final;
     void Draw() override;
+    float AspectRatio() const;
 
     ID3D12Resource* CurrentBackBuffer() const;
     D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView() const;

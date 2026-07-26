@@ -31,6 +31,11 @@ bool CD3D12RenderingEngine::GraphicsApiInitialised()
     return m_d3dDevice;
 }
 
+float CD3D12RenderingEngine::AspectRatio() const
+{
+    return CPrioEngine::GetInstance().AspectRatio();
+}
+
 bool CD3D12RenderingEngine::Initialise()
 {
 #if defined(DEBUG) || defined(_DEBUG)
@@ -100,7 +105,7 @@ bool CD3D12RenderingEngine::Initialise()
     // TODO:
     // Do these all really belong here?
     // I think we can break these up better
-        // Reset the command list to prep for initialization commands.
+    // Reset the command list to prep for initialization commands.
     PrioEngine::ThrowIfFailed(m_CommandList->Reset(m_DirectCmdListAlloc.Get(), nullptr));
 
     BuildDescriptorHeaps();
@@ -303,6 +308,10 @@ void CD3D12RenderingEngine::OnResize()
     m_ScreenViewport.MaxDepth = 1.0f;
 
     m_ScissorRect = { 0, 0, CPrioEngine::GetInstance().GetClientWidth(), CPrioEngine::GetInstance().GetClientHeight() };
+
+    // The window resized, so update the aspect ratio and recompute the projection matrix.
+    DirectX::XMMATRIX P = DirectX::XMMatrixPerspectiveFovLH(0.25f * DirectX::XM_PI, AspectRatio(), 1.0f, 1000.0f);
+    XMStoreFloat4x4(&m_Proj, P);
 }
 
 void CD3D12RenderingEngine::Draw()
@@ -311,22 +320,22 @@ void CD3D12RenderingEngine::Draw()
 
     PrioEngine::ThrowIfFailed(m_CommandList->Reset(m_DirectCmdListAlloc.Get(), nullptr));
 
-    m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
-        D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
     m_CommandList->RSSetViewports(1, &m_ScreenViewport);
     m_CommandList->RSSetScissorRects(1, &m_ScissorRect);
+
+    m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
+        D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
     m_CommandList->ClearRenderTargetView(CurrentBackBufferView(), DirectX::Colors::LightSteelBlue, 0, nullptr);
     m_CommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
     // Specify the buffer we want to render to
     m_CommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
     ID3D12DescriptorHeap* descriptorHeaps[] = { m_CbvHeap.Get() };
     m_CommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
     m_CommandList->SetGraphicsRootSignature(m_RootSignature.Get());
-    m_CommandList->SetPipelineState(m_PSO.Get());
 
     m_CommandList->IASetVertexBuffers(0, 1, &m_BoxGeometry->VertexBufferView());
     m_CommandList->IASetIndexBuffer(&m_BoxGeometry->IndexBufferView());
@@ -534,7 +543,7 @@ void CD3D12RenderingEngine::BuildPSO()
     psoDesc.NumRenderTargets = 1;
     psoDesc.RTVFormats[0] = m_BackBufferFormat;
     psoDesc.SampleDesc.Count = m_4xMsaaQuality ? 4 : 1;
-    psoDesc.SampleDesc.Quality = m_4xMsaaQuality ? (m_4xMsaaState - 1) : 0;
+    psoDesc.SampleDesc.Quality = m_4xMsaaState ? (m_4xMsaaQuality - 1) : 0;
     psoDesc.DSVFormat = m_DepthStencilFormat;
     PrioEngine::ThrowIfFailed(m_d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_PSO)));
 }

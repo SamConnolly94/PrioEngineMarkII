@@ -31,6 +31,7 @@ public:
     int __declspec(dllexport) GetClientHeight() const { return m_ClientHeight; };
     HWND __declspec(dllexport) GetWindowHandle() const { return mh_MainWnd; };
     bool __declspec(dllexport) Update();
+    float __declspec(dllexport) AspectRatio() const { return static_cast<float>(m_ClientWidth) / static_cast<float>(m_ClientHeight); };
 protected:
     CPrioEngine(EGraphicsAPI graphicsApi = EGraphicsAPI::DX12, unsigned int width = 800, unsigned int height = 600, const std::string windowTitle = "Prio Engine II");
     void OnResize();

@@ -82,6 +82,9 @@
     <Filter Include="Header Files\engine\common">
       <UniqueIdentifier>{9c3f08bb-a539-4ea2-8347-77d024a6d8b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{a20ac720-61eb-4019-94cd-4aee39ab14dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\pch.cpp">
@@ -212,5 +215,10 @@
     <ClInclude Include="Header\maths\common\vector4.h">
       <Filter>Header Files\maths\common</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\color.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
