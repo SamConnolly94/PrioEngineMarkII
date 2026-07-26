@@ -85,6 +85,12 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{a20ac720-61eb-4019-94cd-4aee39ab14dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine\input">
+      <UniqueIdentifier>{e142a388-c0e2-4b8b-ad19-3a4f125f68e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\input">
+      <UniqueIdentifier>{765c5932-7ff0-4a06-8b3a-b56216437106}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\pch.cpp">
@@ -137,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="prioengine.cpp">
       <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\engine\input\inputhandler.cpp">
+      <Filter>Source Files\engine\input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="Header\maths\common\vector4.h">
       <Filter>Header Files\maths\common</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\engine\input\inputhandler.h">
+      <Filter>Header Files\engine\input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

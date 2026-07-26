@@ -5,13 +5,13 @@
 #include <Windows.h>
 #include <wrl.h>
 #include <string>
-#include <DirectXMath.h>
 
 using Microsoft::WRL::ComPtr;
 using namespace std;
 
 class CRenderingEngineBase;
 class CTimer;
+class CInputHandler;
 
 class CPrioEngine
 {
@@ -35,10 +35,6 @@ public:
 protected:
     CPrioEngine(EGraphicsAPI graphicsApi = EGraphicsAPI::DX12, unsigned int width = 800, unsigned int height = 600, const std::string windowTitle = "Prio Engine II");
     void OnResize();
-
-    void OnMouseDown(WPARAM btnState, int x, int y);
-    void OnMouseUp(WPARAM btnState, int x, int y);
-    void OnMouseMove(WPARAM btnState, int x, int y);
 private:
     bool InitMainWindow();
 protected:
@@ -48,7 +44,7 @@ protected:
     bool m_Resizing{ false };
     int m_ClientWidth{ 800 };
     int m_ClientHeight{ 600 };
-    POINT m_LastMousePosition{ 0, 0 };
+    std::shared_ptr<CInputHandler> m_InputHandler;
 private:
     inline static CPrioEngine* m_Instance;
     std::unique_ptr<CRenderingEngineBase> m_RenderingEngine{};
@@ -56,9 +52,5 @@ private:
     HINSTANCE mh_Instance{};
     std::wstring m_WindowTitle{};
     std::unique_ptr<CTimer> m_Timer;
-
-    float m_Theta = 1.5f * DirectX::XM_PI;
-    float m_Phi = DirectX::XM_PIDIV4;
-    float mRadius = 5.0f;
 };
 

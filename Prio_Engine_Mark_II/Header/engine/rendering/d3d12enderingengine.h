@@ -17,7 +17,7 @@ class CD3D12RenderingEngine : public CRenderingEngineBase
 public:
     using CRenderingEngineBase::CRenderingEngineBase;
 
-    bool Initialise() override;
+    bool Initialise(std::shared_ptr<CInputHandler> inputHandler) override;
     Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() const;
     virtual bool GraphicsApiInitialised() override;
 protected:

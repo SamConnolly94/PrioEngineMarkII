@@ -110,6 +110,7 @@
   <ItemGroup>
     <ClCompile Include="prioengine.cpp" />
     <ClCompile Include="Source\engine\common\stringconversion.cpp" />
+    <ClCompile Include="Source\engine\input\inputhandler.cpp" />
     <ClCompile Include="Source\engine\rendering\d3d12renderingengine.cpp" />
     <ClCompile Include="Source\engine\rendering\d3d12\common\shaderutil.cpp" />
     <ClCompile Include="Source\engine\rendering\d3d12\uploadbuffer.cpp" />
@@ -127,6 +128,7 @@
     <ClCompile Include="Source\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Header\engine\input\inputhandler.h" />
     <ClInclude Include="Header\maths\common\vector2.h" />
     <ClInclude Include="Header\maths\common\vector3.h" />
     <ClInclude Include="Header\maths\common\vector4.h" />

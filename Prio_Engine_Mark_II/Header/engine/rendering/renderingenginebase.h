@@ -2,8 +2,10 @@
 
 #include <string>
 #include <DirectXMath.h>
+#include <memory>
 
 enum class EGraphicsAPI;
+class CInputHandler;
 
 class CRenderingEngineBase
 {
@@ -23,16 +25,9 @@ protected:
     virtual void UpdateCameraMatrices() = 0;
 protected:
     bool m_4xMsaaState{ false };
-    // TODO:
-    // These are probably gameplay specific things that should be passed in.
-    // THey are here for the box rendering tutorial.
-    // I could remove them afterwards
-    static constexpr float m_Radius{ 5.0f };
-    static constexpr float m_Phi{ DirectX::XM_PIDIV4 };
-    static constexpr float m_Theta = { 1.5f * DirectX::XM_PI };
-    // end TODO
+    std::shared_ptr<CInputHandler> m_InputHandler;
 public:
-    virtual bool Initialise() = 0;
+    virtual bool Initialise(std::shared_ptr<CInputHandler> inputHandler) = 0;
     virtual bool GraphicsApiInitialised() = 0;
 protected:
     EGraphicsAPI m_GraphicsApi;

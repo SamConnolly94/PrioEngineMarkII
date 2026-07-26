@@ -2,6 +2,7 @@
 #include <engine/rendering/d3d12enderingengine.h>
 
 #include <prioengine.h>
+#include <engine/input/inputhandler.h>
 #include <engine/rendering/exceptions/renderingengineexception.h>
 #include <engine/rendering/d3d12/common/shaderutil.h>
 #include <engine/rendering/d3d12/uploadbuffer.h>
@@ -36,8 +37,10 @@ float CD3D12RenderingEngine::AspectRatio() const
     return CPrioEngine::GetInstance().AspectRatio();
 }
 
-bool CD3D12RenderingEngine::Initialise()
+bool CD3D12RenderingEngine::Initialise(std::shared_ptr<CInputHandler> inputHandler)
 {
+    m_InputHandler = inputHandler;
+
 #if defined(DEBUG) || defined(_DEBUG)
     // Enable the D3D12 Debug Layer
     {
@@ -432,9 +435,16 @@ void CD3D12RenderingEngine::UpdateCameraMatrices()
     using namespace DirectX;
 
     // Convert spherical to cartesian coordinates.
-    float x = m_Radius * sinf(m_Phi) * cosf(m_Theta);
-    float z = m_Radius * sinf(m_Phi) * sinf(m_Theta);
-    float y = m_Radius * cosf(m_Phi);
+    CPrioEngine& engine = CPrioEngine::GetInstance();
+
+    auto inputHandler = m_InputHandler.get();
+    float radius = inputHandler->GetRadius();
+    float phi = inputHandler->GetPhi();
+    float theta = inputHandler->GetTheta();
+
+    float x = radius * sinf(phi) * cosf(theta);
+    float z = radius * sinf(phi) * sinf(theta);
+    float y = radius * cosf(phi);
 
     XMVECTOR pos = { x, y, z, 1.0f };
     XMVECTOR target = XMVectorZero();
